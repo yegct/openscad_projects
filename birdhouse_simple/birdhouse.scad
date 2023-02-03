@@ -40,7 +40,7 @@ dimensions = [
 // together the end result?
 module build_screw_test(diam = 5) {
     cube_dim = screw_diam * 3;
-    ScrewHole(outer_diam=5, height=10, tolerance=screw_tolerance)
+    screwHole(outer_diam=5, height=10, tolerance=screw_tolerance)
     cube([cube_dim*2,cube_dim*2,cube_dim], center=true);
     
     translate([cube_dim*2 + screw_diam, 0, 0])
@@ -48,7 +48,7 @@ module build_screw_test(diam = 5) {
         difference() {
             cube([cube_dim*2,cube_dim*2,cube_dim], center=true);
             translate([0,0,-cube_dim/2])
-            ScrewHoleWithoutChildren(outer_diam=screw_diam, height=cube_dim, tolerance=screw_tolerance);
+            screwHole(outer_diam=screw_diam, height=cube_dim, tolerance=screw_tolerance);
         }
 
         translate([0, 0, cube_dim/2-2])
@@ -57,24 +57,21 @@ module build_screw_test(diam = 5) {
     }
 }
 
-// The ScrewHole module in threads requires
+// The screwHole module in threads requires
 // a child object but I'm often wanting to
 // call without this object. This module
 // makes it unnecessary.
-// The reason the arguments are increased
-// before the call to ScrewThread is because
-// the hole has to be large enough for the
-// thread itself, not just the inner diameter
-// of the screw.
-module ScrewHoleWithoutChildren(outer_diam, height, pitch=0, tooth_angle=30, tolerance=0.4, tip_height=0, tooth_height=0, tip_min_fract=0) {
-    ScrewThread(
-        outer_diam=1.01*screw_diam+1.25*tolerance,
-        height=height*1.001,
-        pitch=pitch,
-        tooth_angle=tooth_angle,
-        tolerance=tolerance*1.25,
-        tip_min_fract=0
-    );
+module screwHole(outer_diam, height, position=[0,0,0], rotation=[0,0,0], pitch=0, tooth_angle=30, tolerance=0.4, tooth_height=0) {
+  extra_height = 0.001 * height;
+
+  difference() {
+    if ($children) children();
+    translate(position)
+      rotate(rotation)
+      translate([0, 0, -extra_height/2])
+      ScrewThread(1.01*outer_diam + 1.25*tolerance, height + extra_height,
+        pitch, tooth_angle, tolerance, tooth_height=tooth_height);
+  }
 }
 
 module build_body(x, y, height) {
@@ -120,13 +117,13 @@ module build_ventilation_holes_side(y, height) {
 module build_screw_holes_body_for_roof(floor_x, floor_y, height) {
     
     translate([floor_x*1/3, floor_y+wall_thickness/2, height-10])
-    ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+    screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
 
     translate([floor_x*2/3, floor_y+wall_thickness/2, height-10])
-    ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+    screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
 
     translate([floor_x/2, -wall_thickness/2, height-10])
-    ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+    screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
 }
 
 module build_screw_holes_body_for_floor(floor_x, floor_y) {
@@ -134,13 +131,13 @@ module build_screw_holes_body_for_floor(floor_x, floor_y) {
     rotate([180,0,180])
     union() {
         translate([40/2*1/3,40/2*1/3,0])
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
     
         translate([-40/2*1/3,40/2*1/3,0])
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
     
         translate([0,-40/2*1/3,0])
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness+1, tolerance=screw_tolerance);
     }
 }
 
@@ -162,21 +159,21 @@ module build_screw_holes_for_roof(floor_x, floor_y) {
     
     translate([floor_x*1/3, floor_y+wall_thickness/2, 0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
 
     translate([floor_x*2/3, floor_y+wall_thickness/2, 0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
 
     translate([floor_x/2, -wall_thickness/2, 0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
@@ -195,21 +192,21 @@ module build_roof(floor_x, floor_y) {
 module build_screw_holes_for_attachment() {
     translate([40/2*1/3,40/2*1/3,0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
 
     translate([-40/2*1/3,40/2*1/3,0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
 
     translate([0,-40/2*1/3,0])
     union() {
-        ScrewHoleWithoutChildren(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
+        screwHole(outer_diam=screw_diam, height=wall_thickness, tolerance=screw_tolerance);
         translate([0,0,wall_thickness])
         cylinder(d = screw_diam*2, h=4, center=true);
     }
