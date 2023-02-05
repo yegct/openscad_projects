@@ -22,6 +22,7 @@ ventilation_diameter = 2;
 smooth_rad = 2;
 screw_tolerance = 0.8;
 screw_diam = 5; // M5 screw
+slope_angle = 10; // Slope forward
 
 // Based on information at http://www.earthdesign.ca/bime.html
 // floor_x, floor_y, entrance_hole_diameter, entrance_hole_height
@@ -212,36 +213,57 @@ module build_screw_holes_for_attachment() {
     }
 }
 
+// From https://stackoverflow.com/questions/54115749/how-to-a-make-a-curved-sheet-cube-in-openscad
+module curve(width, height, length, a) {
+    if( a > 0 ) {
+        r = (360 * (length/a)) / (2 * PI);
+        echo("r:");
+        echo(r);
+        echo(-r-height/2);
+        translate( [-r-height/2,0,0] )
+        rotate_extrude(angle = a)
+        translate([r, 0, 0])
+        square(size = [height, width], center = false);
+    } else {
+        translate( [-height/2,0,width] )
+        rotate( a=270, v=[1,0,0] )
+        linear_extrude( height = length )
+        square(size = [height, width], center = false);
+
+    }
+}
+
 module build_attachment(floor_y, slope_forward = 10) {
+    rotate([0,90,0])
     union() {
-        // base attachment circle
-        translate([0,-floor_y/4,wall_thickness])
-        rotate([0,180,0])
+        // base leg, attaches under the birdhouse
         difference() {
-            cylinder(h=wall_thickness, d=40);
+            translate([-20,-20,0])
+            cube([40,floor_y+20,wall_thickness]);
+            translate([0,0,wall_thickness])
+            rotate([0,180,0])
             build_screw_holes_for_attachment();
         }
+        
+        // curve between base and wall legs
+        translate([-20,floor_y,wall_thickness/2])
+        rotate([0,90,0])
+        curve(40, wall_thickness, 20, 90-slope_angle)
+        cube([40,floor_y,wall_thickness]);
 
-        // Base leg
-        translate([-10,15-floor_y/4,0])
-        union() {
-        
-            cube([20,floor_y*3/4+wall_thickness,wall_thickness]);
-        
-        // Wall leg
-            translate([0,floor_y*3/4+wall_thickness-10,5])
-            rotate([-slope_forward,0,0])
-            union() {
-                cube([20,wall_thickness,100]);
-                
-                // wall attachment circle
-                translate([10,10,115])
-                rotate([90,0,0])
-                difference() {
-                    cylinder(h=wall_thickness, d=40);
-                    build_screw_holes_for_attachment();
-                }
-            }
+        // wall leg, for attaching to fence
+    
+        // This calculation was eyeballed.
+        // I'd love an exact calculation
+        translate([0,floor_y+12.6-0.235*slope_angle,0])
+        rotate([270-slope_angle,0,0])
+        translate([0,-floor_y,0])
+        difference() {
+            translate([-20,-20,0])
+            cube([40,floor_y,wall_thickness]);
+            translate([0,0,wall_thickness])
+            rotate([180,0,0])
+            build_screw_holes_for_attachment();
         }
     }
 }
@@ -272,7 +294,8 @@ module Demo() {
             translate([0,0,height])
             build_roof(floor_x, floor_y);
             build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
-            translate([floor_x/2,floor_y/2,-wall_thickness])
+            translate([floor_x/2,floor_y/4,-wall_thickness])
+            rotate([0,-90,0])
             build_attachment(floor_y);
         }
     }
