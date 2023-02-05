@@ -262,24 +262,32 @@ height = (entrance_hole_height + entrance_hole_diameter/2) * 1.25;
 // Simply stick a ! at the beginning
 // of each of the build_ calls.
 // Start with the print test!
-union() {
-    echo("Bird type:");
-    echo(bird_type); // Set this at the top
-
-    // Test your printer's tolerances.
-    //!build_screw_test();
-    rotate([10,0,0])
+module Demo() {
     union() {
-        translate([0,0,height])
-        build_roof(floor_x, floor_y);
-//        difference() {
-        build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
-//        translate([-50,-50,-5])
-//            cube([1000,1000,height]);
-//        }
-        translate([floor_x/2,floor_y/2,-wall_thickness])
-        build_attachment(floor_y);
+        echo("Bird type:");
+        echo(bird_type); // Set this at the top
+    
+        rotate([10,0,0])
+        union() {
+            translate([0,0,height])
+            build_roof(floor_x, floor_y);
+            build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+            translate([floor_x/2,floor_y/2,-wall_thickness])
+            build_attachment(floor_y);
+        }
     }
 }
+
+// Test your printer's tolerances.
+//build_screw_test();
+
+Demo();
+
+// Or build each individual part. Uncomment
+// the single part you wish.
+//build_roof(floor_x, floor_y);
+//build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+//build_attachment(floor_y);
+
 
 // TODO: Consider cubes instead of cylinders for attachment points?
