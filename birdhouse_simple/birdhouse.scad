@@ -1,10 +1,13 @@
+// Licensed under cc-by-sa-4.0, see
+// LICENSE.txt file for details.
+
 // As you'll likely be mounting this
 // outdoors, you want to use a material
 // resistant to UV and to weather.
-// ASA is likely your best choice,
-// though PETg or even PLA may work.
+// I used PETg. ASA is likely a very good
+// choice. PLA may work in a pinch.
 //
-// For infill, I like about 20% 
+// For infill, I like about 20-25%
 // cubic-subdivision.
 
 // Libraries from https://openscad.org/libraries.html
@@ -217,9 +220,6 @@ module build_screw_holes_for_attachment() {
 module curve(width, height, length, a) {
     if( a > 0 ) {
         r = (360 * (length/a)) / (2 * PI);
-        echo("r:");
-        echo(r);
-        echo(-r-height/2);
         translate( [-r-height/2,0,0] )
         rotate_extrude(angle = a)
         translate([r, 0, 0])
@@ -311,6 +311,3 @@ Demo();
 //build_roof(floor_x, floor_y);
 //build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
 //build_attachment(floor_y);
-
-
-// TODO: Consider cubes instead of cylinders for attachment points?
