@@ -80,7 +80,6 @@ module screwHole(outer_diam, height, position=[0,0,0], rotation=[0,0,0], pitch=0
 
 module build_body(x, y, height) {
     translate([-wall_thickness, -wall_thickness, 0])
-    scale([1,1,1])
     difference() {
         SmoothCube([x+wall_thickness*2,y+wall_thickness*2,height], smooth_rad);
         translate([wall_thickness,wall_thickness,wall_thickness])
@@ -268,6 +267,16 @@ module build_attachment(floor_y, slope_forward = 10) {
     }
 }
 
+module build_perch(outside_length=40, inside_length=30, diameter=10) {
+    length = outside_length + wall_thickness + inside_length;
+    
+    union() {
+        cylinder(h=length,d=diameter);
+        translate([0,0,outside_length])
+        cylinder(h=10,d1=diameter,d2=diameter*2);
+    }
+}
+
 specifications = dimensions[search([bird_type], dimensions)[0]];
 inches_to_mm = 25.4;
 assert(specifications, "Failed to specify a known bird type");
@@ -285,15 +294,31 @@ height = (entrance_hole_height + entrance_hole_diameter/2) * 1.25;
 // of each of the build_ calls.
 // Start with the print test!
 module Demo() {
+    want_perch = true;
     union() {
         echo("Bird type:");
         echo(bird_type); // Set this at the top
     
         rotate([10,0,0])
         union() {
-            translate([0,0,height])
-            build_roof(floor_x, floor_y);
-            build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+            //translate([0,0,height])
+            //build_roof(floor_x, floor_y);
+            difference() {
+                build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+                if (want_perch) {
+                    translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+                    rotate([270,90,0])
+                    scale([1.1,1,1])
+                    build_perch(outside_length=40,inside_length=40);
+                }
+            }
+            
+            if (want_perch) {
+                translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+                rotate([270,90,0])
+                build_perch(outside_length=40,inside_length=40);
+            }
+
             translate([floor_x/2,floor_y/4,-wall_thickness])
             rotate([0,-90,0])
             build_attachment(floor_y);
@@ -304,10 +329,20 @@ module Demo() {
 // Test your printer's tolerances.
 //build_screw_test();
 
-Demo();
+//Demo();
 
 // Or build each individual part. Uncomment
 // the single part you wish.
 //build_roof(floor_x, floor_y);
 //build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
 //build_attachment(floor_y);
+//build_perch(outside_length=40,inside_length=40);
+
+difference() {
+    translate([-20,-20,0])
+    SmoothCube([40,40,wall_thickness], smooth_rad);
+    
+    scale([1.1,1,1])
+    build_perch(outside_length=0,inside_length=0);
+}
+
