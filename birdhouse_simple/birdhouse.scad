@@ -293,30 +293,29 @@ height = (entrance_hole_height + entrance_hole_diameter/2) * 1.25;
 // Simply stick a ! at the beginning
 // of each of the build_ calls.
 // Start with the print test!
-module Demo() {
-    want_perch = true;
+module Demo(want_perch = false) {
     union() {
         echo("Bird type:");
         echo(bird_type); // Set this at the top
     
         rotate([10,0,0])
         union() {
-            //translate([0,0,height])
-            //build_roof(floor_x, floor_y);
+            translate([0,0,height])
+            build_roof(floor_x, floor_y);
             difference() {
                 build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
                 if (want_perch) {
                     translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
                     rotate([270,90,0])
                     scale([1.1,1,1])
-                    build_perch(outside_length=40,inside_length=40);
+                    build_perch(outside_length=40,inside_length=30);
                 }
             }
             
             if (want_perch) {
                 translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
                 rotate([270,90,0])
-                build_perch(outside_length=40,inside_length=40);
+                build_perch(outside_length=40,inside_length=30);
             }
 
             translate([floor_x/2,floor_y/4,-wall_thickness])
@@ -329,7 +328,7 @@ module Demo() {
 // Test your printer's tolerances.
 //build_screw_test();
 
-//Demo();
+Demo(want_perch=true);
 
 // Or build each individual part. Uncomment
 // the single part you wish.
@@ -338,11 +337,11 @@ module Demo() {
 //build_attachment(floor_y);
 //build_perch(outside_length=40,inside_length=40);
 
-difference() {
-    translate([-20,-20,0])
-    SmoothCube([40,40,wall_thickness], smooth_rad);
-    
-    scale([1.1,1,1])
-    build_perch(outside_length=0,inside_length=0);
-}
+//difference() {
+//    translate([-20,-20,0])
+//    SmoothCube([40,40,wall_thickness], smooth_rad);
+//    
+//    scale([1.1,1,1])
+//    build_perch(outside_length=0,inside_length=0);
+//}
 
