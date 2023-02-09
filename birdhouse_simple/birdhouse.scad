@@ -26,6 +26,9 @@ smooth_rad = 2;
 screw_tolerance = 0.8;
 screw_diam = 5; // M5 screw
 slope_angle = 10; // Slope forward
+// The perch is optional
+perch_outside_length = 40;
+perch_inside_length = 30;
 
 // Based on information at http://www.earthdesign.ca/bime.html
 // floor_x, floor_y, entrance_hole_diameter, entrance_hole_height
@@ -293,7 +296,7 @@ height = (entrance_hole_height + entrance_hole_diameter/2) * 1.25;
 // Simply stick a ! at the beginning
 // of each of the build_ calls.
 // Start with the print test!
-module Demo(want_perch = false) {
+module Demo(perch = false) {
     union() {
         echo("Bird type:");
         echo(bird_type); // Set this at the top
@@ -304,18 +307,18 @@ module Demo(want_perch = false) {
             build_roof(floor_x, floor_y);
             difference() {
                 build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
-                if (want_perch) {
-                    translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+                if (perch) {
+                    translate([floor_x/2,-perch_outside_length-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
                     rotate([270,90,0])
                     scale([1.1,1,1])
-                    build_perch(outside_length=40,inside_length=30);
+                    build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
                 }
             }
             
-            if (want_perch) {
+            if (perch) {
                 translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
                 rotate([270,90,0])
-                build_perch(outside_length=40,inside_length=30);
+                build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
             }
 
             translate([floor_x/2,floor_y/4,-wall_thickness])
@@ -328,20 +331,14 @@ module Demo(want_perch = false) {
 // Test your printer's tolerances.
 //build_screw_test();
 
-Demo(want_perch=true);
+Demo(perch=false);
 
 // Or build each individual part. Uncomment
 // the single part you wish.
 //build_roof(floor_x, floor_y);
 //build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
 //build_attachment(floor_y);
-//build_perch(outside_length=40,inside_length=40);
-
-//difference() {
-//    translate([-20,-20,0])
-//    SmoothCube([40,40,wall_thickness], smooth_rad);
-//    
-//    scale([1.1,1,1])
-//    build_perch(outside_length=0,inside_length=0);
-//}
-
+// Consider a brim here, though I didn't need one
+// If you want one you can just glue to the outside,
+// set inside_length=0
+//build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
