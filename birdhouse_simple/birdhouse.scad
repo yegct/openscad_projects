@@ -147,7 +147,7 @@ module build_screw_holes_body_for_floor(floor_x, floor_y) {
     }
 }
 
-module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height) {
+module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch) {
     difference() {
         build_body(floor_x, floor_y, height);
 
@@ -158,6 +158,13 @@ module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entranc
         
         build_screw_holes_body_for_roof(floor_x, floor_y, height);
         build_screw_holes_body_for_floor(floor_x, floor_y);
+        
+        if (perch) {
+            translate([floor_x/2,-perch_outside_length-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+            rotate([270,90,0])
+            scale([1.1,1,1])
+            build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
+        }
     }
 }
 
@@ -305,15 +312,7 @@ module Demo(perch = false) {
         union() {
             translate([0,0,height])
             build_roof(floor_x, floor_y);
-            difference() {
-                build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
-                if (perch) {
-                    translate([floor_x/2,-perch_outside_length-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
-                    rotate([270,90,0])
-                    scale([1.1,1,1])
-                    build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
-                }
-            }
+            build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch=perch);
             
             if (perch) {
                 translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
@@ -336,9 +335,10 @@ Demo(perch=false);
 // Or build each individual part. Uncomment
 // the single part you wish.
 //build_roof(floor_x, floor_y);
-//build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+//build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch=false);
 //build_attachment(floor_y);
 // Consider a brim here, though I didn't need one
 // If you want one you can just glue to the outside,
-// set inside_length=0
+// set inside_length=0 and ensure you call
+// build_birdhouse with perch=false.
 //build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
