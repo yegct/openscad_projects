@@ -26,6 +26,9 @@ smooth_rad = 2;
 screw_tolerance = 0.8;
 screw_diam = 5; // M5 screw
 slope_angle = 10; // Slope forward
+// The perch is optional
+perch_outside_length = 40;
+perch_inside_length = 30;
 
 // Based on information at http://www.earthdesign.ca/bime.html
 // floor_x, floor_y, entrance_hole_diameter, entrance_hole_height
@@ -80,7 +83,6 @@ module screwHole(outer_diam, height, position=[0,0,0], rotation=[0,0,0], pitch=0
 
 module build_body(x, y, height) {
     translate([-wall_thickness, -wall_thickness, 0])
-    scale([1,1,1])
     difference() {
         SmoothCube([x+wall_thickness*2,y+wall_thickness*2,height], smooth_rad);
         translate([wall_thickness,wall_thickness,wall_thickness])
@@ -145,7 +147,7 @@ module build_screw_holes_body_for_floor(floor_x, floor_y) {
     }
 }
 
-module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height) {
+module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch) {
     difference() {
         build_body(floor_x, floor_y, height);
 
@@ -156,6 +158,13 @@ module build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entranc
         
         build_screw_holes_body_for_roof(floor_x, floor_y, height);
         build_screw_holes_body_for_floor(floor_x, floor_y);
+        
+        if (perch) {
+            translate([floor_x/2,-perch_outside_length-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+            rotate([270,90,0])
+            scale([1.1,1,1])
+            build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
+        }
     }
 }
 
@@ -268,6 +277,16 @@ module build_attachment(floor_y, slope_forward = 10) {
     }
 }
 
+module build_perch(outside_length=40, inside_length=30, diameter=10) {
+    length = outside_length + wall_thickness + inside_length;
+    
+    union() {
+        cylinder(h=length,d=diameter);
+        translate([0,0,outside_length])
+        cylinder(h=10,d1=diameter,d2=diameter*2);
+    }
+}
+
 specifications = dimensions[search([bird_type], dimensions)[0]];
 inches_to_mm = 25.4;
 assert(specifications, "Failed to specify a known bird type");
@@ -284,7 +303,7 @@ height = (entrance_hole_height + entrance_hole_diameter/2) * 1.25;
 // Simply stick a ! at the beginning
 // of each of the build_ calls.
 // Start with the print test!
-module Demo() {
+module Demo(perch = false) {
     union() {
         echo("Bird type:");
         echo(bird_type); // Set this at the top
@@ -293,7 +312,14 @@ module Demo() {
         union() {
             translate([0,0,height])
             build_roof(floor_x, floor_y);
-            build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+            build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch=perch);
+            
+            if (perch) {
+                translate([floor_x/2,-40-wall_thickness,entrance_hole_height-entrance_hole_diameter*1.5])
+                rotate([270,90,0])
+                build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);
+            }
+
             translate([floor_x/2,floor_y/4,-wall_thickness])
             rotate([0,-90,0])
             build_attachment(floor_y);
@@ -304,10 +330,15 @@ module Demo() {
 // Test your printer's tolerances.
 //build_screw_test();
 
-Demo();
+Demo(perch=false);
 
 // Or build each individual part. Uncomment
 // the single part you wish.
 //build_roof(floor_x, floor_y);
-//build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height);
+//build_birdhouse(floor_x, floor_y, height, entrance_hole_diameter, entrance_hole_height, perch=false);
 //build_attachment(floor_y);
+// Consider a brim here, though I didn't need one
+// If you want one you can just glue to the outside,
+// set inside_length=0 and ensure you call
+// build_birdhouse with perch=false.
+//build_perch(outside_length=perch_outside_length,inside_length=perch_inside_length);

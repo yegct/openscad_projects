@@ -1,13 +1,16 @@
 # Simple Birdhouse
 A deliberately very simple birdhouse based on dimensions specified by [earthdesign](http://www.earthdesign.ca/bime.html). One design file supports four different dimensions of birdhouse and it's easy to configure more.
 
-The birdhouse can be mounted to your wood fence. It's deliberately sloped forward by 10 degrees and has small holes for ventilation and drainage. It does not (currently) have a perch.
+The birdhouse can be mounted to your wood fence. It's deliberately sloped forward by 10 degrees and has small holes for ventilation and drainage.
+
+There's a sample perch which can be glued to the outside, or you may tweak the design to print a perch with an outside and inside component.
 
 ## Requirements
 * 3D printer, obviously. I used a Creality Ender 3 S1 Pro running Klipper. Your print bed size will limit what birdhouses you can print. Mine will handle the chickadee, finch, and sparrow configurations but is too small for swallows.
 * Filament. Probably PETg or ASA, though PLA may work in a pinch. Remember, you'll probably be mounting the birdhouse outdoors where it will be subject to weather and to UV
 * Six M5x20 screws, for attaching the parts together
 * Three M5x25 wood screws, for attaching the birdhouse to your wood fence
+* Gorilla Glue or similar polyurethane glue, if printing the optional perch
 * [OpenSCAD](https://openscad.org/), if you wish to modify the birdhouse
 
 ## How to Print and Mount
@@ -16,6 +19,8 @@ Note that I've only actually printed the birdhouse for chickadees. However, the 
 Consider printing `birdhouse_screw_test.stl` to ensure you'll be able to screw together your final result. If that doesn't work, you can tweak the settings in the OpenSCAD design file.
 
 Using your filament of choice (likely, PETg), print each of the three corresponding `STL` files. For example, `birdhouse_chickadee_roof.stl`, `birdhouse_chickadee_body.stl`, and `birdhouse_chickadee_attachment.stl`. I used a layer height of 20 and cubic subdivision for infill, 25% for the attachment and 20% for the other two files.
+
+If you are printing a perch, attach it to the body using gorilla glue or similar polyurethane glue.
 
 Attach the roof to the body using three M5x20 screws.
 
