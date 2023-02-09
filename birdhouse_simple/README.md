@@ -3,7 +3,7 @@ A deliberately very simple birdhouse based on dimensions specified by [earthdesi
 
 The birdhouse can be mounted to your wood fence. It's deliberately sloped forward by 10 degrees and has small holes for ventilation and drainage.
 
-None of the sample STL files contain a perch but the design file supports one if you wish.
+There's a sample perch which can be glued to the outside, or you may tweak the design to print a perch with an outside and inside component.
 
 ## Requirements
 * 3D printer, obviously. I used a Creality Ender 3 S1 Pro running Klipper. Your print bed size will limit what birdhouses you can print. Mine will handle the chickadee, finch, and sparrow configurations but is too small for swallows.
