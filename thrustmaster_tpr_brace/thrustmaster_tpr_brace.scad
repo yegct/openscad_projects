@@ -146,6 +146,8 @@ module wall_brace() {
         translate([140,50,-1])
         cylinder(d=screw*1.1,h=height+2);
         
+        translate([90,20,-1])
+        cylinder(d=screw*1.1,h=height+2);
     }
 }
 
@@ -162,6 +164,21 @@ module wall(screw_distance) {
     }
 }
 
+module wall_block() {
+    union() {
+        difference() {
+            cylinder(h=40,d=20);
+            translate([0,0,10])
+            cylinder(h=5,d=21);
+        }
+        translate([0,0,10])
+        cylinder(h=5,d=18);
+
+        translate([0,0,40])
+        ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
+    }
+}
+
 module Demo() {
     tpr_base_legs();
     translate([212,118,height])
@@ -173,6 +190,8 @@ module Demo() {
     
     translate([156.5,75,height*2])
     wall(240-212);
+    
+    !wall_block();
 
     many_nuts(12);
 }
