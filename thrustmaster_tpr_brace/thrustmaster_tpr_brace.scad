@@ -132,21 +132,20 @@ module wall_curve() {
 }
 
 module wall_brace() {
-    intersection() {
-        difference() {
+    difference() {
+        intersection() {
             cube([180,80,height]);
-    
-            translate([40,50,-1])
-            cylinder(d=screw*1.1,h=height+2);
-    
-            translate([140,50,-1])
-            cylinder(d=screw*1.1,h=height+2);
-            
+            translate([90,10,-1])
+            linear_extrude(height+2)
+            circle(d=180);
         }
-    
-        translate([90,10,-1])
-        linear_extrude(height+2)
-        circle(d=180);
+
+        translate([40,50,-1])
+        cylinder(d=screw*1.1,h=height+2);
+
+        translate([140,50,-1])
+        cylinder(d=screw*1.1,h=height+2);
+        
     }
 }
 
