@@ -36,7 +36,7 @@ module arm_to_tpr() {
     }
 }
 
-module many_nuts(count = 6) {
+module many_nuts(count) {
     union() {
         for(i = [0 : count - 1]) {
             translate([i*30,-20,0])
@@ -53,18 +53,23 @@ module tpr_base_legs() {
 
         translate([distance_between_base_screws,0,0])
         rotate([0,0,45])
+        mirror([1,0,0])
         arm_to_tpr();
     }
-    many_nuts();
 }
 
 module brace(length) {
     difference() {
         union() {
             cube([10,length,height]);
+
             cylinder(d=20,h=height);
+
             translate([0,length,0])
             cylinder(d=20,h=height);
+
+            translate([0,length/2,0])
+            screw_on_base(height);
         }
         translate([0,0,-1])
         cylinder(d=screw*1.1,h=height+2);
@@ -82,10 +87,9 @@ module Demo() {
         translate([240,90,height])
         rotate([0,0,90])
         brace(147);
+
+        many_nuts(8);
     }
 }
 
-// 150, 90
-
 Demo();
-
