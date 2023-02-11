@@ -169,13 +169,37 @@ module wall_block() {
         difference() {
             cylinder(h=40,d=20);
             translate([0,0,10])
-            cylinder(h=5,d=21);
+            cylinder(h=3,d=21);
         }
         translate([0,0,10])
-        cylinder(h=5,d=18);
+        cylinder(h=3,d=18);
 
         translate([0,0,40])
         ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
+    }
+}
+
+module wall_block_tpu_cover() {
+    union() {
+        difference() {
+            cylinder(h=12,d=22.5);
+            translate([0,0,2])
+            cylinder(h=11,d=20.5);
+        }
+
+        translate([0,0,10])
+        difference() {
+            cylinder(h=2,d=22.5);
+            translate([0,0,-1])
+            cylinder(h=4,d=18.5);
+        }
+    }
+}
+
+module wall_block_with_cover() {
+    union() {
+        wall_block();
+        wall_block_tpu_cover();
     }
 }
 
@@ -191,7 +215,18 @@ module Demo() {
     translate([156.5,75,height*2])
     wall(240-212);
     
-    !wall_block();
+    translate([117,295,87])
+    rotate([90,0,0])
+    wall_block_with_cover();
+
+    translate([217,295,87])
+    rotate([90,0,0])
+    wall_block_with_cover();
+
+    translate([167,295,57])
+    rotate([90,0,0])
+    wall_block_with_cover();
+    
 
     many_nuts(12);
 }
