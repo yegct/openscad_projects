@@ -13,15 +13,20 @@ tolerance = 0.8;
 
 height = 4;
 screw = 8; // Approximately an m8
+// TODO maybe *1.15?
+nut = screw*1.1;
+// TODO maybe a bit less?
+// TODO what about other screw heights?
+tpr_screw_height = 18;
 
 // https://arstechnica.com/gaming/2018/09/thrustmaster-tpr-is-the-king-of-mass-market-flight-sim-pedals/
 distance_between_base_screws = 333;
 
-module screw_on_base(h) {
+module screw_on_base(h,screw=screw) {
     union() {
         cylinder(d=20,h=h);
-        translate([0,0,height])
-        ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
+        translate([0,0,h])
+        ScrewThread(outer_diam=screw,height=tpr_screw_height,tolerance=tolerance);
     }
 }
 
@@ -227,8 +232,17 @@ module Demo() {
     rotate([90,0,0])
     wall_block_with_cover();
     
-
     many_nuts(12);
 }
 
-Demo();
+//Demo();
+
+screw_on_base(h=4,screw=screw);
+//translate([0,22,0])
+//MetricNut(diameter=8.6,thickness=8,tolerance=tolerance);
+
+//translate([22,0,0])
+//MetricNut(diameter=8.8,thickness=8,tolerance=tolerance);
+
+//translate([44,0,0])
+//MetricNut(diameter=9.0,thickness=8,tolerance=tolerance);
