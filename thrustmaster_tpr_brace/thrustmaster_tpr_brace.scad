@@ -51,20 +51,41 @@ module tpr_base_legs() {
         rotate([0,0,-45])
         arm_to_tpr();
 
-        translate([distance_between_base_screws,0,0]) {
-            rotate([0,0,45])
-            arm_to_tpr();
-        }
+        translate([distance_between_base_screws,0,0])
+        rotate([0,0,45])
+        arm_to_tpr();
     }
     many_nuts();
+}
+
+module brace(length) {
+    difference() {
+        union() {
+            cube([10,length,height]);
+            cylinder(d=20,h=height);
+            translate([0,length,0])
+            cylinder(d=20,h=height);
+        }
+        translate([0,0,-1])
+        cylinder(d=screw*1.1,h=height+2);
+        translate([0,length,-1])
+        cylinder(d=screw*1.1,h=height+2);
+    }
 }
 
 module Demo() {
     union() {
         tpr_base_legs();
-        
+        translate([212,118,height])
+        rotate([0,0,90])
+        brace(91);
+        translate([240,90,height])
+        rotate([0,0,90])
+        brace(147);
     }
 }
+
+// 150, 90
 
 Demo();
 
