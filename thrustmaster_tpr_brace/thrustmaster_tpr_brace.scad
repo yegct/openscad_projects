@@ -245,13 +245,20 @@ module Demo() {
 
 Demo();
 
-//screw_on_base(base_height=4,screw=screw);
-//translate([0,22,0])
-//MetricNut(diameter=8.6,thickness=8,tolerance=tolerance);
-
-//translate([22,0,0])
-//MetricNut(diameter=8.8,thickness=8,tolerance=tolerance);
-//MetricNut(diameter=8.85,thickness=8,tolerance=tolerance);
-
-//translate([44,0,0])
-//MetricNut(diameter=9.0,thickness=8,tolerance=tolerance);
+// Individual parts.
+//arm_to_tpr();
+//translate([screw_support_diam+2,0,0])
+//mirror([1,0,0])
+//arm_to_tpr();
+//
+//brace(91);
+//translate([screw_support_diam+2,0,0])
+//brace(147);
+//
+//wall(240-212);
+//
+//wall_block();
+//
+//wall_block_tpu_cover();
+//
+//many_nuts(1);
