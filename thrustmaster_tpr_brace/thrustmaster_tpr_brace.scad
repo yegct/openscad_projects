@@ -19,6 +19,7 @@ tpr_screw_height = 18;
 other_screw_height=height*3+2;
 
 screw_support_diam = 20;
+wall_extension_diam = 20;
 
 // https://arstechnica.com/gaming/2018/09/thrustmaster-tpr-is-the-king-of-mass-market-flight-sim-pedals/
 distance_between_base_screws = 333;
@@ -173,12 +174,12 @@ module wall(screw_distance) {
 module wall_block() {
     union() {
         difference() {
-            cylinder(h=40,d=screw_support_diam);
+            cylinder(h=40,d=wall_extension_diam);
             translate([0,0,10])
-            cylinder(h=3,d=screw_support_diam+1);
+            cylinder(h=3,d=wall_extension_diam+1);
         }
         translate([0,0,10])
-        cylinder(h=3,d=screw_support_diam-2);
+        cylinder(h=3,d=wall_extension_diam-2);
 
         translate([0,0,40])
         ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
@@ -186,18 +187,22 @@ module wall_block() {
 }
 
 module wall_block_tpu_cover() {
+    outer_diam = wall_extension_diam + 5;
+    inner_diam = wall_extension_diam + 0.5;
+    catch_diam = wall_extension_diam - 1.5;
+    translate([0,0,-5])
     union() {
         difference() {
-            cylinder(h=12,d=22.5);
-            translate([0,0,2])
-            cylinder(h=11,d=20.5);
+            cylinder(h=15,d=outer_diam);
+            translate([0,0,5])
+            cylinder(h=11,d=inner_diam);
         }
 
-        translate([0,0,10])
+        translate([0,0,15])
         difference() {
-            cylinder(h=2,d=22.5);
+            cylinder(h=2,d=outer_diam);
             translate([0,0,-1])
-            cylinder(h=4,d=18.5);
+            cylinder(h=4,d=catch_diam);
         }
     }
 }
