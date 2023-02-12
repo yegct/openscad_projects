@@ -13,38 +13,39 @@ tolerance = 0.8;
 
 height = 4;
 screw = 8; // Approximately an m8
-// TODO maybe *1.15?
-nut = screw*1.1;
-// TODO maybe a bit less?
-// TODO what about other screw heights?
+screw_hole = 1.01*screw + 1.25*tolerance;
+nut = screw*1.10625;
 tpr_screw_height = 18;
+other_screw_height=height*3+2;
+
+screw_support_diam = 20;
 
 // https://arstechnica.com/gaming/2018/09/thrustmaster-tpr-is-the-king-of-mass-market-flight-sim-pedals/
 distance_between_base_screws = 333;
 
-module screw_on_base(h,screw=screw) {
+module screw_on_base(base_height,screw=screw,screw_height=other_screw_height) {
     union() {
-        cylinder(d=20,h=h);
-        translate([0,0,h])
-        ScrewThread(outer_diam=screw,height=tpr_screw_height,tolerance=tolerance);
+        cylinder(d=screw_support_diam,h=base_height);
+        translate([0,0,base_height])
+        ScrewThread(outer_diam=screw,height=screw_height,tolerance=tolerance);
     }
 }
 
 module arm_to_tpr() {
     union() {
-        screw_on_base(h=height);
+        screw_on_base(base_height=height,screw_height=tpr_screw_height);
         cube([10,180,height]);
         translate([0,130,0])
-        screw_on_base(h=height);
+        screw_on_base(base_height=height);
         translate([0,170,0])
-        screw_on_base(h=height);
+        screw_on_base(base_height=height);
     }
 }
 
 module many_nuts(count) {
     union() {
         for(i = [0 : count - 1]) {
-            translate([i*30,-20,0])
+            translate([i*30,-screw_support_diam,0])
             // TODO not sure about thickness
             MetricNut(diameter=screw,thickness=height*2,tolerance=tolerance);            
         }
@@ -68,13 +69,13 @@ module brace(length) {
         union() {
             cube([10,length,height]);
 
-            cylinder(d=20,h=height);
+            cylinder(d=screw_support_diam,h=height);
 
             translate([0,length,0])
-            cylinder(d=20,h=height);
+            cylinder(d=screw_support_diam,h=height);
 
             translate([0,length/2,0])
-            screw_on_base(height);
+            screw_on_base(base_height=height);
         }
         translate([0,0,-1])
         cylinder(d=screw*1.1,h=height+2);
@@ -85,7 +86,7 @@ module brace(length) {
 
 module wall_base_connector(screw_distance) {
     difference() {
-        cube([20,60,height]);
+        cube([screw_support_diam,60,height]);
         translate([10,15,-1])
         cylinder(d=screw*1.1,h=height+2);
         translate([10,15+screw_distance,-1])
@@ -172,12 +173,12 @@ module wall(screw_distance) {
 module wall_block() {
     union() {
         difference() {
-            cylinder(h=40,d=20);
+            cylinder(h=40,d=screw_support_diam);
             translate([0,0,10])
-            cylinder(h=3,d=21);
+            cylinder(h=3,d=screw_support_diam+1);
         }
         translate([0,0,10])
-        cylinder(h=3,d=18);
+        cylinder(h=3,d=screw_support_diam-2);
 
         translate([0,0,40])
         ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
@@ -235,14 +236,15 @@ module Demo() {
     many_nuts(12);
 }
 
-//Demo();
+Demo();
 
-screw_on_base(h=4,screw=screw);
+//screw_on_base(base_height=4,screw=screw);
 //translate([0,22,0])
 //MetricNut(diameter=8.6,thickness=8,tolerance=tolerance);
 
 //translate([22,0,0])
 //MetricNut(diameter=8.8,thickness=8,tolerance=tolerance);
+//MetricNut(diameter=8.85,thickness=8,tolerance=tolerance);
 
 //translate([44,0,0])
 //MetricNut(diameter=9.0,thickness=8,tolerance=tolerance);
