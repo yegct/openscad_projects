@@ -182,13 +182,13 @@ module wall_block() {
         cylinder(h=3,d=wall_extension_diam-2);
 
         translate([0,0,40])
-        ScrewThread(outer_diam=screw,height=10,tolerance=tolerance);
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
     }
 }
 
 module wall_block_tpu_cover() {
-    outer_diam = wall_extension_diam + 5;
-    inner_diam = wall_extension_diam + 0.5;
+    inner_diam = wall_extension_diam + 2;
+    outer_diam = inner_diam + 5;
     catch_diam = wall_extension_diam - 1.5;
     translate([0,0,-5])
     union() {
