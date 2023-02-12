@@ -187,7 +187,7 @@ module wall_block() {
 }
 
 module wall_block_tpu_cover() {
-    inner_diam = wall_extension_diam + 2;
+    inner_diam = wall_extension_diam + 0.5;
     outer_diam = inner_diam + 5;
     catch_diam = wall_extension_diam - 1.5;
     translate([0,0,-5])
