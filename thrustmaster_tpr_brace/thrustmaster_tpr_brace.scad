@@ -76,22 +76,24 @@ module brace(length) {
             cylinder(d=screw_support_diam,h=height);
 
             translate([0,length/2,0])
-            screw_on_base(base_height=height);
+            cylinder(d=screw_support_diam,h=height);
         }
         translate([0,0,-1])
         cylinder(d=screw*1.1,h=height+2);
         translate([0,length,-1])
         cylinder(d=screw*1.1,h=height+2);
+        translate([0,length/2,-1])
+        cylinder(d=screw*1.1,h=height+2);
     }
 }
 
 module wall_base_connector(screw_distance) {
-    difference() {
+    union() {
         cube([screw_support_diam,60,height]);
-        translate([10,15,-1])
-        cylinder(d=screw*1.1,h=height+2);
-        translate([10,15+screw_distance,-1])
-        cylinder(d=screw*1.1,h=height+2);
+        translate([screw_support_diam/2,15,height])
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+        translate([screw_support_diam/2,15+screw_distance,height])
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
     }
 }
 
@@ -223,18 +225,18 @@ module Demo() {
     rotate([0,0,90])
     brace(147);
     
-    translate([156.5,75,height*2])
+    translate([156.5,75,0])
     wall(240-212);
     
-    translate([117,295,87])
+    translate([117,295,79])
     rotate([90,0,0])
     wall_block_with_cover();
 
-    translate([217,295,87])
+    translate([217,295,79])
     rotate([90,0,0])
     wall_block_with_cover();
 
-    translate([167,295,57])
+    translate([167,295,49])
     rotate([90,0,0])
     wall_block_with_cover();
     
