@@ -189,18 +189,18 @@ module wall_block() {
 }
 
 module wall_block_tpu_cover() {
-    inner_diam = wall_extension_diam + 0.5;
+    inner_diam = wall_extension_diam + 1;
     outer_diam = inner_diam + 5;
-    catch_diam = wall_extension_diam - 1.5;
-    translate([0,0,-5])
+    catch_diam = wall_extension_diam - 0.25;
+    translate([0,0,-9])
     union() {
         difference() {
-            cylinder(h=15,d=outer_diam);
-            translate([0,0,5])
+            cylinder(h=19,d=outer_diam);
+            translate([0,0,9])
             cylinder(h=11,d=inner_diam);
         }
 
-        translate([0,0,15])
+        translate([0,0,19])
         difference() {
             cylinder(h=2,d=outer_diam);
             translate([0,0,-1])
