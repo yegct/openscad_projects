@@ -48,7 +48,7 @@ module many_nuts(count) {
         for(i = [0 : count - 1]) {
             translate([i*30,-screw_support_diam,0])
             // TODO not sure about thickness
-            MetricNut(diameter=screw,thickness=height*2,tolerance=tolerance);            
+            MetricNut(diameter=nut,thickness=height*2,tolerance=tolerance);
         }
     }
 }
@@ -84,6 +84,26 @@ module brace(length) {
         cylinder(d=screw*1.1,h=height+2);
         translate([0,length/2,-1])
         cylinder(d=screw*1.1,h=height+2);
+    }
+}
+
+module base_braces() {
+    rotate([0,0,270])
+    union() {
+        brace(91);
+        translate([28,-28,0])
+        brace(147);
+
+        translate([5,41,0])
+        cube([18,10,height]);
+
+        translate([2,-10,0])
+        rotate([0,0,-45])
+        cube([26,10,height]);
+
+        translate([7,91,0])
+        rotate([0,0,45])
+        cube([26,10,height]);
     }
 }
 
@@ -218,12 +238,8 @@ module wall_block_with_cover() {
 
 module Demo() {
     tpr_base_legs();
-    translate([212,118,height])
-    rotate([0,0,90])
-    brace(91);
-    translate([240,90,height])
-    rotate([0,0,90])
-    brace(147);
+    translate([120,118,height])
+    base_braces();
     
     translate([156.5,75,0])
     wall(240-212);
@@ -251,9 +267,7 @@ Demo();
 //mirror([1,0,0])
 //arm_to_tpr();
 //
-//brace(91);
-//translate([screw_support_diam+2,0,0])
-//brace(147);
+//base_braces();
 //
 //wall(240-212);
 //
