@@ -5,13 +5,13 @@ use <smooth-prim/smooth_prim.scad>
 nozzle_diameter = 0.4;
 $fs = nozzle_diameter / 2;
 $fa = 5;
-smooth_rad = 4;
+smooth_rad = 2;
 
 // Dimensions of the table.
 // Note that the actual table will be slightly larger
 // to account for the rounding of the edges.
 length = 150;
-width = 100;
+width = 50;
 height = 50;
 thickness = 8;
 
