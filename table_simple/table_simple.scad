@@ -5,12 +5,12 @@ use <smooth-prim/smooth_prim.scad>
 nozzle_diameter = 0.4;
 $fs = nozzle_diameter / 2;
 $fa = 5;
-smooth_rad = 2;
+smooth_rad = 4;
 
 // Dimensions of the table.
 // Note that the actual table will be slightly larger
 // to account for the rounding of the edges.
-length = 100;
+length = 150;
 width = 100;
 height = 50;
 thickness = 8;
@@ -21,7 +21,7 @@ module build_outer() {
 
 module build_inner() {
     translate([thickness,-1,-thickness])
-    SmoothCube([length-thickness*2,width+2,height], smooth_rad);
+    cube([length-thickness*2,width+2,height]);
 }
 
 module build_m_leg() {
@@ -33,8 +33,8 @@ module build_m_leg() {
       [ (length+thickness)/2, width, 0 ],  //2
       [ (length-thickness)/2, width, 0 ],  //3
       [ thickness, 0, inner_height ],  //4
-      [ length-smooth_rad, 0, inner_height ],  //5
-      [ length-smooth_rad, width, inner_height ],  //6
+      [ length-thickness, 0, inner_height ],  //5
+      [ length-thickness, width, inner_height ],  //6
       [ thickness, width, inner_height ] ];  //7
 
     CubeFaces = [
