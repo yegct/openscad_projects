@@ -24,22 +24,28 @@ wall_extension_diam = 20;
 // https://arstechnica.com/gaming/2018/09/thrustmaster-tpr-is-the-king-of-mass-market-flight-sim-pedals/
 distance_between_base_screws = 333;
 
-module screw_on_base(base_height,screw=screw,screw_height=other_screw_height) {
+module screw_on_base(base_height,screw=screw,screw_height=other_screw_height,mirrored=false) {
     union() {
         cylinder(d=screw_support_diam,h=base_height);
-        translate([0,0,base_height])
-        ScrewThread(outer_diam=screw,height=screw_height,tolerance=tolerance);
+        translate([0,0,base_height]) {
+            if (mirrored) {
+                mirror([1,0,0])
+                ScrewThread(outer_diam=screw,height=screw_height,tolerance=tolerance);
+            } else {
+                ScrewThread(outer_diam=screw,height=screw_height,tolerance=tolerance);
+            }
+        }
     }
 }
 
-module arm_to_tpr() {
+module arm_to_tpr(mirrored) {
     union() {
-        screw_on_base(base_height=height,screw_height=tpr_screw_height);
+        screw_on_base(base_height=height,screw_height=tpr_screw_height,mirrored=mirrored);
         cube([10,180,height]);
         translate([0,130,0])
-        screw_on_base(base_height=height);
+        screw_on_base(base_height=height,mirrored=mirrored);
         translate([0,170,0])
-        screw_on_base(base_height=height);
+        screw_on_base(base_height=height,mirrored=mirrored);
     }
 }
 
@@ -56,12 +62,12 @@ module many_nuts(count) {
 module tpr_base_legs() {
     union() {
         rotate([0,0,-45])
-        arm_to_tpr();
+        arm_to_tpr(mirrored=false);
 
         translate([distance_between_base_screws,0,0])
         rotate([0,0,45])
         mirror([1,0,0])
-        arm_to_tpr();
+        arm_to_tpr(mirrored=true);
     }
 }
 
@@ -262,10 +268,10 @@ module Demo() {
 Demo();
 
 // Individual parts.
-//arm_to_tpr();
+//arm_to_tpr(mirrored=false);
 //translate([screw_support_diam+2,0,0])
 //mirror([1,0,0])
-//arm_to_tpr();
+//arm_to_tpr(mirrored=true);
 //
 //base_braces();
 //
