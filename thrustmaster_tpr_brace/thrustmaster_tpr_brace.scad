@@ -14,7 +14,7 @@ tolerance = 0.8;
 height = 4;
 screw = 8; // Approximately an m8
 screw_hole = 1.01*screw + 1.25*tolerance;
-nut = screw*1.10625;
+nut = screw*1.11;
 tpr_screw_height = 18;
 other_screw_height=height*3+2;
 
