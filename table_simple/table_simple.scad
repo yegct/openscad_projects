@@ -4,37 +4,38 @@ $fs = nozzle_diameter / 2;
 $fa = 5;
 
 // Dimensions of the table.
-// Note that the actual table will be slightly larger
-// to account for the rounding of the edges.
+// These dimensions include the rounding factor.
+smooth_rad = 2;
 length = 150;
 width = 50;
 height = 50;
 thickness = 8;
-smooth_rad = 2;
+
+l = length - smooth_rad*2;
+w = width - smooth_rad*2;
+h = height - smooth_rad*2;
 
 module build_outer() {
     difference() {
         minkowski() {
-            cube([length,width,height]);
+            cube([l,w,h]);
             sphere(smooth_rad);
         }
         translate([thickness,-smooth_rad,-thickness])
-        cube([length-thickness*2,width+2*smooth_rad,height]);
+        cube([l-thickness*2,w+2*smooth_rad,h]);
     }
 }
 
 module build_v_support() {
-    inner_height = height-thickness;
-
     CubePoints = [
-      [ (length-thickness)/2, -smooth_rad, -smooth_rad ],  //0
-      [ (length+thickness)/2, -smooth_rad, -smooth_rad ],  //1
-      [ (length+thickness)/2, width+smooth_rad, -smooth_rad ],  //2
-      [ (length-thickness)/2, width+smooth_rad, -smooth_rad ],  //3
-      [ thickness, -smooth_rad, inner_height ],  //4
-      [ length-thickness, -smooth_rad, inner_height ],  //5
-      [ length-thickness, width+smooth_rad, inner_height ],  //6
-      [ thickness, width+smooth_rad, inner_height ] ];  //7
+      [ (l-thickness)/2, -smooth_rad, -smooth_rad ],  //0
+      [ (l+thickness)/2, -smooth_rad, -smooth_rad ],  //1
+      [ (l+thickness)/2, w+smooth_rad, -smooth_rad ],  //2
+      [ (l-thickness)/2, w+smooth_rad, -smooth_rad ],  //3
+      [ thickness, -smooth_rad, h-thickness ],  //4
+      [ l-thickness, -smooth_rad, h-thickness ],  //5
+      [ l-thickness, w+smooth_rad, h-thickness ],  //6
+      [ thickness, w+smooth_rad, h-thickness ] ];  //7
 
     CubeFaces = [
       [0,1,2,3],  // bottom
@@ -48,6 +49,7 @@ module build_v_support() {
 }
 
 module build_table(v_support) {
+    translate([smooth_rad,smooth_rad,smooth_rad])
     union() {
         build_outer();
         if (v_support) {
