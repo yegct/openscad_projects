@@ -64,12 +64,9 @@ module build_table(v_support) {
 }
 
 module Demo(v_support) {
-    build_table(v_support);
-}
-
-module Print(v_support) {
-    // Rotate so it's best positioned for printing
-    if (v_support) {
+    if ($preview) {
+        build_table(v_support);
+    } else if (v_support) { // Rotate so it's best positioned for printing
         translate([0,height,0])
         rotate([90,0,0])
         build_table(v_support);
@@ -80,5 +77,4 @@ module Print(v_support) {
     }
 }
 
-Demo(v_support=true);
-//Print(v_support=true);
+Demo(v_support=false);
