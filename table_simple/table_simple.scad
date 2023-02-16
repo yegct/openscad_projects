@@ -7,7 +7,7 @@ $fa = 5;
 // These dimensions include the rounding factor.
 smooth_rad = 2;
 length = 150;
-width = 50;
+width = 100;
 height = 50;
 thickness = 8;
 
@@ -69,8 +69,15 @@ module Demo(v_support) {
 
 module Print(v_support) {
     // Rotate so it's best positioned for printing
-    rotate([90,0,0])
-    build_table(v_support);
+    if (v_support) {
+        translate([0,height,0])
+        rotate([90,0,0])
+        build_table(v_support);
+    } else {
+        translate([0,width,height])
+        rotate([180,0,0])
+        build_table(v_support);
+    }
 }
 
 Demo(v_support=true);
