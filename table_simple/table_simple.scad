@@ -27,10 +27,10 @@ module build_v_support() {
     inner_height = height-thickness;
 
     CubePoints = [
-      [ (length-thickness)/2, -smooth_rad, 0 ],  //0
-      [ (length+thickness)/2, -smooth_rad, 0 ],  //1
-      [ (length+thickness)/2, width+smooth_rad, 0 ],  //2
-      [ (length-thickness)/2, width+smooth_rad, 0 ],  //3
+      [ (length-thickness)/2, -smooth_rad, -smooth_rad ],  //0
+      [ (length+thickness)/2, -smooth_rad, -smooth_rad ],  //1
+      [ (length+thickness)/2, width+smooth_rad, -smooth_rad ],  //2
+      [ (length-thickness)/2, width+smooth_rad, -smooth_rad ],  //3
       [ thickness, -smooth_rad, inner_height ],  //4
       [ length-thickness, -smooth_rad, inner_height ],  //5
       [ length-thickness, width+smooth_rad, inner_height ],  //6
