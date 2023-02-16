@@ -1,6 +1,3 @@
-// Libraries from https://openscad.org/libraries.html
-use <smooth-prim/smooth_prim.scad>
-
 // Smoothness of generated output
 nozzle_diameter = 0.4;
 $fs = nozzle_diameter / 2;
@@ -10,32 +7,35 @@ smooth_rad = 2;
 // Dimensions of the table.
 // Note that the actual table will be slightly larger
 // to account for the rounding of the edges.
-length = 150;
+length = 100;
 width = 50;
 height = 50;
 thickness = 8;
 
 module build_outer() {
-    SmoothCube([length,width,height], smooth_rad);
+    minkowski() {
+        cube([length,width,height]);
+        sphere(smooth_rad);
+    }
 }
 
 module build_inner() {
-    translate([thickness,-1,-thickness])
-    cube([length-thickness*2,width+2,height]);
+    translate([thickness,-smooth_rad,-thickness])
+    cube([length-thickness*2,width+2*smooth_rad,height]);
 }
 
 module build_m_leg() {
     inner_height = height-thickness;
 
     CubePoints = [
-      [ (length-thickness)/2, 0, 0 ],  //0
-      [ (length+thickness)/2, 0, 0 ],  //1
-      [ (length+thickness)/2, width, 0 ],  //2
-      [ (length-thickness)/2, width, 0 ],  //3
-      [ thickness, 0, inner_height ],  //4
-      [ length-thickness, 0, inner_height ],  //5
-      [ length-thickness, width, inner_height ],  //6
-      [ thickness, width, inner_height ] ];  //7
+      [ (length-thickness)/2, -smooth_rad, 0 ],  //0
+      [ (length+thickness)/2, -smooth_rad, 0 ],  //1
+      [ (length+thickness)/2, width+smooth_rad, 0 ],  //2
+      [ (length-thickness)/2, width+smooth_rad, 0 ],  //3
+      [ thickness, -smooth_rad, inner_height ],  //4
+      [ length-thickness, -smooth_rad, inner_height ],  //5
+      [ length-thickness, width+smooth_rad, inner_height ],  //6
+      [ thickness, width+smooth_rad, inner_height ] ];  //7
 
     CubeFaces = [
       [0,1,2,3],  // bottom
