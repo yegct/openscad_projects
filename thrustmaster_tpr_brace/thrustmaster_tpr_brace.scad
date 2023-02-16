@@ -1,5 +1,3 @@
-// Screw in to base... maybe M8?
-
 // Libraries from https://openscad.org/libraries.html
 use <smooth-prim/smooth_prim.scad>
 use <threads-scad/threads.scad>
@@ -115,24 +113,24 @@ module base_braces() {
 
 module wall_base_connector(screw_distance) {
     union() {
-        cube([screw_support_diam,60,height]);
-        translate([screw_support_diam/2,15,height])
-        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
-        translate([screw_support_diam/2,15+screw_distance,height])
-        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+        translate([-36.5,43,0])
+        base_braces();
+
+        translate([-screw_support_diam,5,0])
+        cube([screw_support_diam*3,55,height*2]);
     }
 }
 
 module wall_extension() {
     CubePoints = [
-      [  0,  0,  0 ],  //0
-      [ 20,  0,  0 ],  //1
-      [ 100, 90,  0 ],  //2
-      [ -80, 90,  0 ],  //3
-      [  0,  0,  height ],  //4
-      [ 20,  0,  height ],  //5
-      [ 100, 90,  height ],  //6
-      [ -80, 90,  height ]]; //7
+      [ -20,  0, 0 ],  //0
+      [  40,  0, 0 ],  //1
+      [ 100, 90, 0 ],  //2
+      [ -80, 90, 0 ],  //3
+      [ -20,  0, height*2 ],  //4
+      [  40,  0, height*2 ],  //5
+      [ 100, 90, height*2 ],  //6
+      [ -80, 90, height*2 ]]; //7
       
     CubeFaces = [
       [0,1,2,3],  // bottom
@@ -161,28 +159,28 @@ module curve(width, height, length, a) {
     }
 }
 module wall_curve() {
-    translate([0,0,height/2])
+    translate([0,0,height])
     rotate([0,90,0])
-    curve(180,height,40,90);
+    curve(180,height*2,20,90);
 }
 
 module wall_brace() {
     difference() {
         intersection() {
-            cube([180,80,height]);
+            cube([180,80,height*2]);
             translate([90,10,-1])
-            linear_extrude(height+2)
-            circle(d=180);
+            linear_extrude(height*2+2)
+            circle(d=182);
         }
 
         translate([40,50,-1])
-        cylinder(d=screw*1.1,h=height+2);
+        cylinder(d=screw*1.1,h=height*2+2);
 
         translate([140,50,-1])
-        cylinder(d=screw*1.1,h=height+2);
+        cylinder(d=screw*1.1,h=height*2+2);
         
-        translate([90,20,-1])
-        cylinder(d=screw*1.1,h=height+2);
+        translate([90,35,-1])
+        cylinder(d=screw*1.1,h=height*2+2);
     }
 }
 
@@ -193,7 +191,7 @@ module wall(screw_distance) {
         wall_extension();
         translate([-80,150,0])
         wall_curve();
-        translate([-80,179.5,height+25])
+        translate([-80,170.75,height+15])
         rotate([90,0,0])
         wall_brace();
     }
@@ -210,7 +208,7 @@ module wall_block() {
         cylinder(h=3,d=wall_extension_diam-2);
 
         translate([0,0,40])
-        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+        ScrewThread(outer_diam=screw,height=other_screw_height+height,tolerance=tolerance);
     }
 }
 
@@ -244,25 +242,23 @@ module wall_block_with_cover() {
 
 module Demo() {
     tpr_base_legs();
-    translate([120,118,height])
-    base_braces();
     
     translate([156.5,75,0])
     wall(240-212);
     
-    translate([117,295,79])
+    translate([117,286.25,70])
     rotate([90,0,0])
     wall_block_with_cover();
 
-    translate([217,295,79])
+    translate([217,286.25,70])
     rotate([90,0,0])
     wall_block_with_cover();
 
-    translate([167,295,49])
+    translate([167,286.25,55])
     rotate([90,0,0])
     wall_block_with_cover();
     
-    many_nuts(12);
+    many_nuts(9);
 }
 
 Demo();
@@ -272,9 +268,7 @@ Demo();
 //translate([screw_support_diam+2,0,0])
 //mirror([1,0,0])
 //arm_to_tpr(mirrored=true);
-//
-//base_braces();
-//
+
 //wall(240-212);
 //
 //wall_block();
