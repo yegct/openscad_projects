@@ -2,29 +2,28 @@
 nozzle_diameter = 0.4;
 $fs = nozzle_diameter / 2;
 $fa = 5;
-smooth_rad = 2;
 
 // Dimensions of the table.
 // Note that the actual table will be slightly larger
 // to account for the rounding of the edges.
-length = 100;
+length = 150;
 width = 50;
 height = 50;
 thickness = 8;
+smooth_rad = 2;
 
 module build_outer() {
-    minkowski() {
-        cube([length,width,height]);
-        sphere(smooth_rad);
+    difference() {
+        minkowski() {
+            cube([length,width,height]);
+            sphere(smooth_rad);
+        }
+        translate([thickness,-smooth_rad,-thickness])
+        cube([length-thickness*2,width+2*smooth_rad,height]);
     }
 }
 
-module build_inner() {
-    translate([thickness,-smooth_rad,-thickness])
-    cube([length-thickness*2,width+2*smooth_rad,height]);
-}
-
-module build_m_leg() {
+module build_v_support() {
     inner_height = height-thickness;
 
     CubePoints = [
@@ -48,32 +47,29 @@ module build_m_leg() {
     polyhedron( CubePoints, CubeFaces );
 }
 
-module build_table(m_support) {
+module build_table(v_support) {
     union() {
-        difference() {
-            build_outer();
-            build_inner();
-        }
-        if (m_support) {
+        build_outer();
+        if (v_support) {
             difference() {
-                build_m_leg();
+                build_v_support();
                 translate([0,-1,thickness])
                 scale([1,1.1,1])
-                build_m_leg();
+                build_v_support();
             }
         }
     }
 }
 
-module Demo(m_support) {
-    build_table(m_support);
+module Demo(v_support) {
+    build_table(v_support);
 }
 
-module Print(m_support) {
+module Print(v_support) {
     // Rotate so it's best positioned for printing
     rotate([90,0,0])
-    build_table(m_support);
+    build_table(v_support);
 }
 
-Demo(m_support=true);
-//Print(m_support=true);
+Demo(v_support=true);
+//Print(v_support=true);
