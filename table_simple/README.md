@@ -9,6 +9,7 @@ You can adjust the dimensions easily in [OpenSCAD](https://openscad.org/). You c
 * Layer height 0.20
 * Infill 20%, higher if you want a bit more stability
 * Cubic subdivision (or cubic or gyroid) for infill pattern
+* Note the object is rotated optimally for printing, when you hit Render
 
 ## How to Tweak
 The design is parameterised. Open the file in OpenSCAD and take a look at the top. You can change the length, width, height, and thickness. You can choose to include the v-support structure or not.
