@@ -195,19 +195,22 @@ module wall_brace() {
     }
 }
 
-module wall(screw_distance) {
-    union() {
-        translate([0,0,height])
-        difference() {
-            wall_base_connector(screw_distance);
+module stability_connector(screw_distance) {
+    translate([0,0,height])
+    difference() {
+        wall_base_connector(screw_distance);
 
-            translate([0,45,-1])
-            cylinder(d=screw*1.1,h=height+2);
-            translate([screw_support_diam,45,-1])
-            cylinder(d=screw*1.1,h=height+2);
-            translate([screw_support_diam/2,30,-1])
-            cylinder(d=screw*1.1,h=height+2);
-        }
+        translate([0,45,-1])
+        cylinder(d=screw*1.1,h=height+2);
+        translate([screw_support_diam,45,-1])
+        cylinder(d=screw*1.1,h=height+2);
+        translate([screw_support_diam/2,30,-1])
+        cylinder(d=screw*1.1,h=height+2);
+    }
+}
+
+module wall() {
+    union() {
         translate([0,60,0])
         wall_extension();
         translate([-80,150,0])
@@ -264,8 +267,10 @@ module wall_block_with_cover() {
 module Demo() {
     tpr_base_legs();
     
-    translate([156.5,75,height])
-    wall(240-212);
+    translate([156.5,75,height]) {
+        stability_connector(240-212);
+        wall();
+    }
     
     translate([117,286.25,70])
     rotate([90,0,0])
@@ -290,7 +295,8 @@ Demo();
 //mirror([1,0,0])
 //arm_to_tpr(mirrored=true);
 //
-//wall(240-212);
+//stability_connector(240-212);
+//wall();
 //
 //wall_block();
 //
