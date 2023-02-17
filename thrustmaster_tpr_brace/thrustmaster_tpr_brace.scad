@@ -117,7 +117,7 @@ module wall_base_connector(screw_distance) {
         base_braces();
 
         translate([-screw_support_diam,5,0])
-        cube([screw_support_diam*3,55,height*2]);
+        cube([screw_support_diam*3,54,height]);
     }
 }
 
@@ -139,8 +139,19 @@ module wall_extension() {
       [5,6,2,1],  // right
       [6,7,3,2],  // back
       [7,4,0,3]]; // left
-      
-    polyhedron( CubePoints, CubeFaces );
+
+    union() {
+        polyhedron( CubePoints, CubeFaces );
+
+        translate([-screw_support_diam,-55,0])
+        cube([screw_support_diam*3,55,height]);
+        translate([0,-15,height])
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+        translate([screw_support_diam,-15,height])
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+        translate([screw_support_diam/2,-30,height])
+        ScrewThread(outer_diam=screw,height=other_screw_height,tolerance=tolerance);
+    }
 }
 
 // From https://stackoverflow.com/questions/54115749/how-to-a-make-a-curved-sheet-cube-in-openscad
@@ -186,7 +197,17 @@ module wall_brace() {
 
 module wall(screw_distance) {
     union() {
-        wall_base_connector(screw_distance);
+        translate([0,0,height])
+        difference() {
+            wall_base_connector(screw_distance);
+
+            translate([0,45,-1])
+            cylinder(d=screw*1.1,h=height+2);
+            translate([screw_support_diam,45,-1])
+            cylinder(d=screw*1.1,h=height+2);
+            translate([screw_support_diam/2,30,-1])
+            cylinder(d=screw*1.1,h=height+2);
+        }
         translate([0,60,0])
         wall_extension();
         translate([-80,150,0])
@@ -258,7 +279,7 @@ module Demo() {
     rotate([90,0,0])
     wall_block_with_cover();
     
-    many_nuts(9);
+    many_nuts(12);
 }
 
 Demo();
@@ -268,7 +289,7 @@ Demo();
 //translate([screw_support_diam+2,0,0])
 //mirror([1,0,0])
 //arm_to_tpr(mirrored=true);
-
+//
 //wall(240-212);
 //
 //wall_block();
