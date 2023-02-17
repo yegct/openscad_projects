@@ -243,7 +243,7 @@ module wall_block_with_cover() {
 module Demo() {
     tpr_base_legs();
     
-    translate([156.5,75,0])
+    translate([156.5,75,height])
     wall(240-212);
     
     translate([117,286.25,70])
