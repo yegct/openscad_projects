@@ -1,7 +1,7 @@
 // In mm
 back_height = 40;
 front_height = 32;
-width_of_medicine_cabinet = 270;
+width_of_medicine_cabinet = 268;
 width_spacer = width_of_medicine_cabinet / 2;
 width_separator = width_of_medicine_cabinet / 4;
 depth = 16;
@@ -26,9 +26,9 @@ module separator() {
 
 module print_spacer() {
     union() {
-        hump(width_spacer);
+        hump(width_spacer/2);
         translate([0, depth - thickness, 0])
-        back_face(width_spacer);
+        back_face(width_spacer/2);
     }
 }
 
@@ -44,8 +44,8 @@ module print_separator() {
 
 // For optimal positioning for printing, uncomment
 // the rotate
-//rotate([0,90,0])
+rotate([0,90,0])
 // Uncomment one of the following
-print_spacer();
-//print_separator();
+//print_spacer();
+print_separator();
 
