@@ -10,6 +10,10 @@ You'll want to print a total of twelve models, four for each row in the medicine
 
 The models are oriented for printing. I print at a layer height of 0.20. Infill doesn't matter as these are thin models.
 
+## Source Repository
+
+All files are stored in [github](https://github.com/yegct/openscad_projects/tree/main/campervan).
+
 ## License
 
 See LICENSE.TXT. This code is licensed under CC-BY-SA-4.0. That license allows for private use, modification, distribution, and even commercial useso long as you provide attribution. See the license for details.
