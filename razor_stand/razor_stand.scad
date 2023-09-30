@@ -4,7 +4,7 @@ $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
 
 // Wall thickness
-thickness = 2.0;
+thickness = 1.6;
 height = 190.0;
 width = 120.0;
 depth = 100.0;
@@ -18,6 +18,8 @@ blade_container_height = 75.0;
 
 blade_disposal_width = 42.0;
 blade_disposal_depth = 62.0;
+
+hollow_back = true;
 
 // Smoothing is INCREDIBLY slow.
 should_smooth = false;
@@ -72,8 +74,12 @@ module poly_cutout(width,depth,height) {
 module body() {
     difference() {
         cube([depth, width, height]);
-        translate([fudge,thickness,thickness*2])
-        cube([depth+fudge,width-thickness*2,height-thickness*4]);
+        if (hollow_back) {
+            translate([-fudge,thickness,thickness*2])
+            cube([depth+fudge*2,width-thickness*2,height-thickness*4]);
+        } else {
+            translate([fudge,thickness,thickness*2])                                                       cube([depth+fudge,width-thickness*2,height-thickness*4]);
+        }
         translate([-fudge,-fudge,height-thickness])
         angle_slice();
     }
@@ -134,7 +140,7 @@ module blade_container() {
 if (should_smooth) {
     minkowski() {
         unsmoothed_stand();
-        cylinder(d=5,h=1);
+        cylinder(d=thickness,h=1);
     }
 } else {
     unsmoothed_stand();
