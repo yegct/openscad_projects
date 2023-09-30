@@ -6,7 +6,7 @@ $fa = $preview ? $fa : 5;
 // Wall thickness
 thickness = 5.0;
 height = 200.0;
-width = 200.0;
+width = 120.0;
 depth = 100.0;
 bowl_diameter = 85.0;
 brush_cutout_diameter = 27.0;
@@ -25,25 +25,48 @@ should_smooth = false;
 fudge = 0.01;
 
 module angle_slice() {
-        CubePoints = [
-          [ 0, 0, 0 ],
-          [ depth+fudge*2, 0, thickness+fudge ],
-          [ depth+fudge*2, width+fudge*2, thickness+fudge ],
-          [ 0, width+fudge*2, 0 ],
-          [ 0, 0, thickness+fudge*2 ],
-          [ depth+fudge*2, 0, thickness+fudge ],
-          [ depth+fudge*2, width+fudge*2, thickness+fudge ],
-          [ 0, width+fudge*2, thickness+fudge ]];
+    CubePoints = [
+      [ 0, 0, 0 ],
+      [ depth+fudge*2, 0, thickness+fudge ],
+      [ depth+fudge*2, width+fudge*2, thickness+fudge ],
+      [ 0, width+fudge*2, 0 ],
+      [ 0, 0, thickness+fudge*2 ],
+      [ depth+fudge*2, 0, thickness+fudge ],
+      [ depth+fudge*2, width+fudge*2, thickness+fudge ],
+      [ 0, width+fudge*2, thickness+fudge ]];
 
-        CubeFaces = [
-          [0,1,2,3],
-          [4,5,1,0],
-          [7,6,5,4],
-          [5,6,2,1],
-          [6,7,3,2],
-          [7,4,0,3]];
+    CubeFaces = [
+      [0,1,2,3],
+      [4,5,1,0],
+      [7,6,5,4],
+      [5,6,2,1],
+      [6,7,3,2],
+      [7,4,0,3]];
 
-        polyhedron( CubePoints, CubeFaces );
+    polyhedron( CubePoints, CubeFaces );
+}
+
+module poly_cutout(width,depth,height) {
+    slope = 4;
+    CubePoints = [
+      [ 0,  0, 0 ],
+      [ width, 0, 0 ],
+      [ width, depth, 0 ],
+      [ 0, depth, 0 ],
+      [ -slope, -slope, height+fudge ],
+      [ width+slope, -slope,  height+fudge ],
+      [ width+slope, depth+slope,  height+fudge ],
+      [ -slope, depth+slope, height+fudge ]];
+
+    CubeFaces = [
+      [0,1,2,3],
+      [4,5,1,0],
+      [7,6,5,4],
+      [5,6,2,1],
+      [6,7,3,2],
+      [7,4,0,3]];
+
+    polyhedron( CubePoints, CubeFaces );
 }
 
 module body() {
@@ -62,13 +85,17 @@ module bowl_cutout() {
 }
 
 module blade_cutout() {
-    translate([thickness*2,thickness*2,thickness])
-    cube([blade_container_depth+4, blade_container_width+4, blade_container_height+4]);
+    local_depth = blade_container_depth + 4;
+    local_width = blade_container_width + 4;
+    translate([(depth-local_depth-thickness*2)/2,15,thickness])
+    poly_cutout(local_depth, local_width, thickness);
 }
 
 module blade_disposal_cutout() {
-    translate([thickness*2,width-blade_disposal_width-thickness*2,thickness])
-    cube([blade_disposal_depth, blade_disposal_width, thickness*2]);
+    local_depth = blade_disposal_depth + 4;
+    local_width = blade_disposal_width + 4;
+    translate([(depth-local_depth-thickness*2)/2,width-local_width-15,thickness])
+    poly_cutout(local_depth, local_width, thickness);
 }
 
 module top_cutout(cutout_diameter) {
@@ -85,8 +112,8 @@ module unsmoothed_stand() {
         body();
         // Bottom cutouts
         bowl_cutout();
-        blade_cutout();
-        blade_disposal_cutout();
+//        blade_cutout();
+//        blade_disposal_cutout();
         
         // Top cutouts
         translate([depth/3,width/3,height-thickness-fudge])
@@ -113,6 +140,6 @@ if (should_smooth) {
     unsmoothed_stand();
 }
 
-translate([0, width + 10, blade_container_width+4])
-rotate([0,90,0])
-blade_container();
+//translate([0, width + 10, blade_container_width+4])
+//rotate([0,90,0])
+//blade_container();
