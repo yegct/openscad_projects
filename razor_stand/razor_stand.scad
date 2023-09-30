@@ -20,23 +20,22 @@ use <smooth-prim/smooth_prim.scad>
 
 module stand() {
     difference() {
-        SmoothCube([depth, width, height], 5);
-        translate([0,thickness,thickness*2])
-        cube([depth,width-thickness*2,height-thickness*3]);
+        cube([depth, width, height]);
+        translate([fudge,thickness,thickness*2])
+        cube([depth+fudge,width-thickness*2,height-thickness*3]);
     }
 }
 
 module bowl_cutout() {
     translate([depth/2,width/2,thickness+fudge])
-    cylinder(h=thickness, d = bowl_diameter);
+    cylinder(h=thickness+fudge, d = bowl_diameter);
 }
 
 module top_cutout(cutout_diameter) {
     translate([cutout_diameter/2,0,0])
     union() {
-        translate([0,0,-fudge])
         cylinder(h=thickness+fudge*2, d = cutout_diameter);
-        translate([0,-cutout_diameter/2,-fudge])
+        translate([0,-cutout_diameter/2,0])
         cube([depth, cutout_diameter,thickness+fudge*2]);
     }
 }
