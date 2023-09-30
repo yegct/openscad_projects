@@ -32,6 +32,7 @@ module bowl_cutout() {
 }
 
 module top_cutout(cutout_diameter) {
+    translate([cutout_diameter/2,0,0])
     union() {
         translate([0,0,-fudge])
         cylinder(h=thickness+fudge*2, d = cutout_diameter);
@@ -53,9 +54,9 @@ module razor_cutout() {
 difference() {
     stand();
     bowl_cutout();
-    translate([depth/2,width/3,height-thickness-fudge])
+    translate([depth/3,width/3,height-thickness-fudge])
     top_cutout(brush_cutout_diameter);
-    translate([depth/2,width*2/3,height-thickness-fudge])
+    translate([depth/3,width*2/3,height-thickness-fudge])
     top_cutout(razor_cutout_diameter);
 }
 
