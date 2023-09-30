@@ -4,7 +4,7 @@ $fs = nozzle_diameter / 2;
 $fa = 5;
 
 // Wall thickness
-thickness = 10.0;
+thickness = 5.0;
 height = 250.0;
 width = 200.0;
 depth = 150.0;
@@ -12,14 +12,13 @@ bowl_diameter = 50.0;
 brush_cutout_diameter = 40.0;
 razor_cutout_diameter = 20.0;
 
-smooth_rad = 5;
 fudge = 0.01;
 
 module stand() {
     difference() {
         cube([depth, width, height]);
         translate([fudge,thickness,thickness*2])
-        cube([depth+fudge,width-thickness*2,height-thickness*3]);
+        cube([depth+fudge,width-thickness*2,height-thickness*4]);
     }
 }
 
@@ -29,11 +28,11 @@ module bowl_cutout() {
 }
 
 module top_cutout(cutout_diameter) {
-    translate([cutout_diameter/2,0,0])
+    translate([cutout_diameter/2,0,-thickness])
     union() {
-        cylinder(h=thickness+fudge*2, d = cutout_diameter);
+        cylinder(h=thickness*2+fudge*2, d = cutout_diameter);
         translate([0,-cutout_diameter/2,0])
-        cube([depth, cutout_diameter,thickness+fudge*2]);
+        cube([depth, cutout_diameter,thickness*2+fudge*2]);
     }
 }
 
