@@ -7,10 +7,10 @@ $fa = $preview ? $fa : 5;
 thickness = 5.0;
 height = 200.0;
 width = 150.0;
-depth = 150.0;
+depth = 100.0;
 bowl_diameter = 85.0;
-brush_cutout_diameter = 40.0;
-razor_cutout_diameter = 20.0;
+brush_cutout_diameter = 27.0;
+razor_cutout_diameter = 12.0;
 // Smoothing is INCREDIBLY slow.
 should_smooth = false;
 
