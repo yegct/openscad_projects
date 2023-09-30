@@ -11,6 +11,8 @@ depth = 150.0;
 bowl_diameter = 50.0;
 brush_cutout_diameter = 40.0;
 razor_cutout_diameter = 20.0;
+// Smoothing is VERY slow! 5 is a good value, or set to 0 to skip
+smooth_rad = 0;
 
 fudge = 0.01;
 
@@ -60,11 +62,23 @@ module top_cutout(cutout_diameter) {
     }
 }
 
-difference() {
-    stand();
-    translate([depth/3,width/3,height-thickness-fudge])
-    top_cutout(brush_cutout_diameter);
-    translate([depth/3,width*2/3,height-thickness-fudge])
-    top_cutout(razor_cutout_diameter);
-    bowl_cutout();
+module unsmoothed_object() {
+    difference() {
+        stand();
+        translate([depth/3,width/3,height-thickness-fudge])
+        top_cutout(brush_cutout_diameter);
+        translate([depth/3,width*2/3,height-thickness-fudge])
+        top_cutout(razor_cutout_diameter);
+        bowl_cutout();
+    }
+}
+
+if (smooth_rad > 0) {
+    minkowski() {
+        unsmoothed_object();
+        cylinder(r=smooth_rad,h=1);
+        cylinder(r=1,h=1);
+    }
+} else {
+    unsmoothed_object();
 }
