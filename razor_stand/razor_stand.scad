@@ -1,7 +1,7 @@
 // Smoothness of generated output
 nozzle_diameter = 0.4;
-$fs = nozzle_diameter / 2;
-$fa = 5;
+$fs = $preview ? $fs : nozzle_diameter / 2;
+$fa = $preview ? $fa : 5;
 
 // Wall thickness
 thickness = 5.0;
@@ -76,7 +76,6 @@ module unsmoothed_object() {
 if (should_smooth) {
     minkowski() {
         unsmoothed_object();
-        cylinder(r=smooth_rad,h=1);
         cylinder(d=5,h=1);
     }
 } else {
