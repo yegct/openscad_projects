@@ -4,8 +4,8 @@ $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
 
 // Wall thickness
-thickness = 5.0;
-height = 200.0;
+thickness = 2.0;
+height = 190.0;
 width = 120.0;
 depth = 100.0;
 bowl_diameter = 85.0;
