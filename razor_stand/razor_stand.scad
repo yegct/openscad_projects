@@ -15,9 +15,6 @@ razor_cutout_diameter = 20.0;
 smooth_rad = 5;
 fudge = 0.01;
 
-// Libraries from https://openscad.org/libraries.html
-use <smooth-prim/smooth_prim.scad>
-
 module stand() {
     difference() {
         cube([depth, width, height]);
@@ -40,16 +37,6 @@ module top_cutout(cutout_diameter) {
     }
 }
 
-module razor_cutout() {
-    translate([depth/2,width*2/3,height-thickness-fudge])
-    union() {
-        translate([0,0,-fudge])
-        cylinder(h=thickness+fudge*2, d = bowl_diameter);
-        translate([0,-bowl_diameter/2,-fudge])
-        cube([depth, bowl_diameter,thickness+fudge*2]);
-    }
-}
-
 difference() {
     stand();
     bowl_cutout();
@@ -58,8 +45,6 @@ difference() {
     translate([depth/3,width*2/3,height-thickness-fudge])
     top_cutout(razor_cutout_diameter);
 }
-
-
 
 
 // todo bend top up a bit
