@@ -5,10 +5,10 @@ $fa = $preview ? $fa : 5;
 
 // Wall thickness
 thickness = 5.0;
-height = 250.0;
-width = 200.0;
+height = 200.0;
+width = 150.0;
 depth = 150.0;
-bowl_diameter = 50.0;
+bowl_diameter = 85.0;
 brush_cutout_diameter = 40.0;
 razor_cutout_diameter = 20.0;
 // Smoothing is INCREDIBLY slow.
