@@ -6,11 +6,19 @@ $fa = $preview ? $fa : 5;
 // Wall thickness
 thickness = 5.0;
 height = 200.0;
-width = 150.0;
+width = 200.0;
 depth = 100.0;
 bowl_diameter = 85.0;
 brush_cutout_diameter = 27.0;
 razor_cutout_diameter = 12.0;
+
+blade_container_width = 32.0;
+blade_container_depth = 52.0;
+blade_container_height = 75.0;
+
+blade_disposal_width = 42.0;
+blade_disposal_depth = 62.0;
+
 // Smoothing is INCREDIBLY slow.
 should_smooth = false;
 
@@ -38,7 +46,7 @@ module angle_slice() {
         polyhedron( CubePoints, CubeFaces );
 }
 
-module stand() {
+module body() {
     difference() {
         cube([depth, width, height]);
         translate([fudge,thickness,thickness*2])
@@ -53,6 +61,16 @@ module bowl_cutout() {
     cylinder(h=thickness+fudge, d = bowl_diameter);
 }
 
+module blade_cutout() {
+    translate([thickness*2,thickness*2,thickness])
+    cube([blade_container_depth+4, blade_container_width+4, blade_container_height+4]);
+}
+
+module blade_disposal_cutout() {
+    translate([thickness*2,width-blade_disposal_width-thickness*2,thickness])
+    cube([blade_disposal_depth, blade_disposal_width, thickness*2]);
+}
+
 module top_cutout(cutout_diameter) {
     translate([cutout_diameter/2,0,-thickness])
     union() {
@@ -62,22 +80,39 @@ module top_cutout(cutout_diameter) {
     }
 }
 
-module unsmoothed_object() {
+module unsmoothed_stand() {
     difference() {
-        stand();
+        body();
+        // Bottom cutouts
+        bowl_cutout();
+        blade_cutout();
+        blade_disposal_cutout();
+        
+        // Top cutouts
         translate([depth/3,width/3,height-thickness-fudge])
         top_cutout(brush_cutout_diameter);
         translate([depth/3,width*2/3,height-thickness-fudge])
         top_cutout(razor_cutout_diameter);
-        bowl_cutout();
+    }
+}
+
+module blade_container() {
+    difference() {
+        cube([blade_container_width+4, blade_container_depth+4, blade_container_height+4]);
+        translate([2,2,2])
+        cube([blade_container_width, blade_container_depth, blade_container_height+4]);
     }
 }
 
 if (should_smooth) {
     minkowski() {
-        unsmoothed_object();
+        unsmoothed_stand();
         cylinder(d=5,h=1);
     }
 } else {
-    unsmoothed_object();
+    unsmoothed_stand();
 }
+
+translate([0, width + 10, blade_container_width+4])
+rotate([0,90,0])
+blade_container();
