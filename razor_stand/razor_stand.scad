@@ -11,8 +11,8 @@ depth = 150.0;
 bowl_diameter = 50.0;
 brush_cutout_diameter = 40.0;
 razor_cutout_diameter = 20.0;
-// Smoothing is VERY slow! 5 is a good value, or set to 0 to skip
-smooth_rad = 0;
+// Smoothing is INCREDIBLY slow.
+should_smooth = false;
 
 fudge = 0.01;
 
@@ -73,11 +73,11 @@ module unsmoothed_object() {
     }
 }
 
-if (smooth_rad > 0) {
+if (should_smooth) {
     minkowski() {
         unsmoothed_object();
         cylinder(r=smooth_rad,h=1);
-        cylinder(r=1,h=1);
+        cylinder(d=5,h=1);
     }
 } else {
     unsmoothed_object();
