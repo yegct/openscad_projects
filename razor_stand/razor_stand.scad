@@ -14,11 +14,35 @@ razor_cutout_diameter = 20.0;
 
 fudge = 0.01;
 
+module angle_slice() {
+        CubePoints = [
+          [ 0, 0, 0 ],
+          [ depth+fudge*2, 0, thickness+fudge ],
+          [ depth+fudge*2, width+fudge*2, thickness+fudge ],
+          [ 0, width+fudge*2, 0 ],
+          [ 0, 0, thickness+fudge*2 ],
+          [ depth+fudge*2, 0, thickness+fudge ],
+          [ depth+fudge*2, width+fudge*2, thickness+fudge ],
+          [ 0, width+fudge*2, thickness+fudge ]];
+
+        CubeFaces = [
+          [0,1,2,3],
+          [4,5,1,0],
+          [7,6,5,4],
+          [5,6,2,1],
+          [6,7,3,2],
+          [7,4,0,3]];
+
+        polyhedron( CubePoints, CubeFaces );
+}
+
 module stand() {
     difference() {
         cube([depth, width, height]);
         translate([fudge,thickness,thickness*2])
         cube([depth+fudge,width-thickness*2,height-thickness*4]);
+        translate([-fudge,-fudge,height-thickness])
+        angle_slice();
     }
 }
 
@@ -38,12 +62,10 @@ module top_cutout(cutout_diameter) {
 
 difference() {
     stand();
+    cylinder(d=5, h=1);
     bowl_cutout();
     translate([depth/3,width/3,height-thickness-fudge])
     top_cutout(brush_cutout_diameter);
     translate([depth/3,width*2/3,height-thickness-fudge])
     top_cutout(razor_cutout_diameter);
 }
-
-
-// todo bend top up a bit
