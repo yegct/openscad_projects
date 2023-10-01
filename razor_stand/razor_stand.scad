@@ -8,7 +8,8 @@ thickness = 1.6;
 height = 190.0;
 width = 120.0;
 depth = 100.0;
-bowl_diameter = 85.0;
+// Was 85, 90 was a bit too large
+bowl_diameter = 88.0;
 brush_cutout_diameter = 27.0;
 razor_cutout_diameter = 12.0;
 
@@ -137,6 +138,7 @@ module blade_container() {
     }
 }
 
+difference() {
 if (should_smooth) {
     minkowski() {
         unsmoothed_stand();
@@ -144,6 +146,14 @@ if (should_smooth) {
     }
 } else {
     unsmoothed_stand();
+}
+    // slice off all the top
+    translate([-thickness, -thickness, thickness*3])
+    cube([depth+thickness*2, width+thickness*2, height+thickness*2]);
+
+    // slice off all the bottom
+//    translate([-thickness, -thickness, -fudge])
+//    cube([depth+thickness*2, width+thickness*2, height-thickness*3]);
 }
 
 //translate([0, width + 10, blade_container_width+4])
