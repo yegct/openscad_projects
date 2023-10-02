@@ -8,17 +8,9 @@ thickness = 1.6;
 height = 190.0;
 width = 120.0;
 depth = 100.0;
-// Was 85, 90 was a bit too large
 bowl_diameter = 88.0;
 brush_cutout_diameter = 27.0;
 razor_cutout_diameter = 12.0;
-
-blade_container_width = 32.0;
-blade_container_depth = 52.0;
-blade_container_height = 75.0;
-
-blade_disposal_width = 42.0;
-blade_disposal_depth = 62.0;
 
 hollow_back = true;
 
@@ -91,20 +83,6 @@ module bowl_cutout() {
     cylinder(h=thickness+fudge, d = bowl_diameter);
 }
 
-module blade_cutout() {
-    local_depth = blade_container_depth + 4;
-    local_width = blade_container_width + 4;
-    translate([(depth-local_depth-thickness*2)/2,15,thickness])
-    poly_cutout(local_depth, local_width, thickness);
-}
-
-module blade_disposal_cutout() {
-    local_depth = blade_disposal_depth + 4;
-    local_width = blade_disposal_width + 4;
-    translate([(depth-local_depth-thickness*2)/2,width-local_width-15,thickness])
-    poly_cutout(local_depth, local_width, thickness);
-}
-
 module top_cutout(cutout_diameter) {
     translate([cutout_diameter/2,0,-thickness])
     union() {
@@ -117,24 +95,14 @@ module top_cutout(cutout_diameter) {
 module unsmoothed_stand() {
     difference() {
         body();
-        // Bottom cutouts
+        // Bottom cutout
         bowl_cutout();
-//        blade_cutout();
-//        blade_disposal_cutout();
         
         // Top cutouts
         translate([depth/3,width/3,height-thickness-fudge])
         top_cutout(brush_cutout_diameter);
         translate([depth/3,width*2/3,height-thickness-fudge])
         top_cutout(razor_cutout_diameter);
-    }
-}
-
-module blade_container() {
-    difference() {
-        cube([blade_container_width+4, blade_container_depth+4, blade_container_height+4]);
-        translate([2,2,2])
-        cube([blade_container_width, blade_container_depth, blade_container_height+4]);
     }
 }
 
@@ -155,7 +123,3 @@ if (should_smooth) {
 //    translate([-thickness, -thickness, -fudge])
 //    cube([depth+thickness*2, width+thickness*2, height-thickness*3]);
 }
-
-//translate([0, width + 10, blade_container_width+4])
-//rotate([0,90,0])
-//blade_container();
