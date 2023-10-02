@@ -148,8 +148,8 @@ if (should_smooth) {
     unsmoothed_stand();
 }
     // slice off all the top
-    translate([-thickness, -thickness, thickness*3])
-    cube([depth+thickness*2, width+thickness*2, height+thickness*2]);
+//    translate([-thickness, -thickness, thickness*3])
+//    cube([depth+thickness*2, width+thickness*2, height+thickness*2]);
 
     // slice off all the bottom
 //    translate([-thickness, -thickness, -fudge])
