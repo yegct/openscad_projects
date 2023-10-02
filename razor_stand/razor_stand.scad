@@ -3,19 +3,19 @@ nozzle_diameter = 0.4;
 $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
 
-// Wall thickness
-thickness = 1.6;
-height = 190.0;
-width = 120.0;
-depth = 100.0;
-bowl_diameter = 88.0;
+bowl_cutout_diameter = 88.0;
 brush_cutout_diameter = 27.0;
 razor_cutout_diameter = 12.0;
 
-hollow_back = true;
+// Wall thickness
+thickness = 1.6;
+height = 150.0;
+// Was 120
+width = bowl_cutout_diameter + 20 + razor_cutout_diameter*3;
+depth = bowl_cutout_diameter + 20.0;
 
 // Smoothing is INCREDIBLY slow.
-should_smooth = false;
+should_smooth = true;
 
 fudge = 0.01;
 
@@ -41,17 +41,16 @@ module angle_slice() {
     polyhedron( CubePoints, CubeFaces );
 }
 
-module poly_cutout(width,depth,height) {
-    slope = 4;
+module side_slice() {
     CubePoints = [
-      [ 0,  0, 0 ],
-      [ width, 0, 0 ],
-      [ width, depth, 0 ],
-      [ 0, depth, 0 ],
-      [ -slope, -slope, height+fudge ],
-      [ width+slope, -slope,  height+fudge ],
-      [ width+slope, depth+slope,  height+fudge ],
-      [ -slope, depth+slope, height+fudge ]];
+      [ -fudge, -fudge, thickness*2 ],
+      [ thickness*2, -fudge, thickness*2 ],
+      [ thickness*2, width/3, (height-thickness*4)/3 ],
+      [ -fudge, width/3, (height-thickness*4)/3 ],
+      [ -fudge, -fudge, height-thickness*2 ],
+      [ thickness*2, -fudge, height-thickness*2 ],
+      [ thickness*2, width/3, (height-thickness*4)*2/3 ],
+      [ -fudge, width/3, (height-thickness*4)*2/3 ]];
 
     CubeFaces = [
       [0,1,2,3],
@@ -65,26 +64,29 @@ module poly_cutout(width,depth,height) {
 }
 
 module body() {
+    minkowski() {
     difference() {
         cube([depth, width, height]);
-        if (hollow_back) {
-            translate([-fudge,thickness,thickness*2])
-            cube([depth+fudge*2,width-thickness*2,height-thickness*4]);
-        } else {
-            translate([fudge,thickness,thickness*2])                                                       cube([depth+fudge,width-thickness*2,height-thickness*4]);
-        }
+        translate([thickness,-fudge,thickness*2])
+        cube([depth,width+fudge*2,height-thickness*4]);
         translate([-fudge,-fudge,height-thickness])
         angle_slice();
+        side_slice();
+        translate([0,width,0])
+        mirror([0,1,0])
+        side_slice();
+    }
+    cylinder(r=thickness,h=1);
     }
 }
 
 module bowl_cutout() {
-    translate([depth/2,width/2,thickness+fudge])
-    cylinder(h=thickness+fudge, d = bowl_diameter);
+    translate([depth/2,(bowl_cutout_diameter+20)/2,thickness+fudge])
+    cylinder(h=thickness+fudge, d = bowl_cutout_diameter);
 }
 
 module top_cutout(cutout_diameter) {
-    translate([cutout_diameter/2,0,-thickness])
+    translate([cutout_diameter/2,0,-thickness*2-fudge])
     union() {
         cylinder(h=thickness*2+fudge*2, d = cutout_diameter);
         translate([0,-cutout_diameter/2,0])
@@ -92,29 +94,25 @@ module top_cutout(cutout_diameter) {
     }
 }
 
-module unsmoothed_stand() {
+module stand() {
     difference() {
         body();
-        // Bottom cutout
         bowl_cutout();
         
-        // Top cutouts
-        translate([depth/3,width/3,height-thickness-fudge])
+        // Brush cutout
+        translate([depth/3,(bowl_cutout_diameter+20)/2,height])
         top_cutout(brush_cutout_diameter);
-        translate([depth/3,width*2/3,height-thickness-fudge])
+
+        // Razor cutout
+        translate([depth/3,bowl_cutout_diameter+20+razor_cutout_diameter,height])
         top_cutout(razor_cutout_diameter);
     }
 }
 
+//rotate([0,-90,0])
 difference() {
-if (should_smooth) {
-    minkowski() {
-        unsmoothed_stand();
-        cylinder(d=thickness,h=1);
-    }
-} else {
-    unsmoothed_stand();
-}
+stand();
+
     // slice off all the top
 //    translate([-thickness, -thickness, thickness*3])
 //    cube([depth+thickness*2, width+thickness*2, height+thickness*2]);
