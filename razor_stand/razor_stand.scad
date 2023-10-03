@@ -3,19 +3,18 @@ nozzle_diameter = 0.4;
 $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
 
-bowl_cutout_diameter = 87.0;
+bowl_cutout_diameter = 88.0;
 brush_cutout_diameter = 27.0;
 razor_cutout_diameter = 12.0;
 
 // Wall thickness
 thickness = 1.6;
 height = 150.0;
-// Was 120
 width = bowl_cutout_diameter + 20 + razor_cutout_diameter*3;
 depth = bowl_cutout_diameter + 20.0;
 
 // Smoothing is INCREDIBLY slow.
-should_smooth = false;
+should_smooth = true;
 
 fudge = 0.01;
 
@@ -106,18 +105,11 @@ module stand() {
     }
 }
 
-//rotate([0,-90,0])
-difference() {
+if (should_smooth) {
     minkowski() {
         stand();
         cylinder(r=thickness,h=1);
     }
-
-    // slice off all the top
-//    translate([-thickness, -thickness, thickness*3])
-//    cube([depth+thickness*2, width+thickness*2, height+thickness*2]);
-
-    // slice off all the bottom
-    translate([-thickness, -thickness, -fudge])
-    cube([depth+thickness*2, width+thickness*2, height-thickness*1]);
+} else {
+    stand();
 }
