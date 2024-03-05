@@ -8,22 +8,14 @@ use <text_on/text_on.scad>
 
 name_text = "Name";
 param_wall_thickness = 2;
-param_height = 150;
-param_width = 40;
+param_height = 180;
+param_width = 100;
 text_colour = "white";
-text_size = 10;
+text_size = 20;
 twist = 120;
 epsilon = 0.1;
 
 module vase_text() {
-//    linear_extrude(height=1)
-//    text(
-//        text = name_text,
-//        font="Arial:style=Bold",
-//        halign = "center",
-//        valign = "center",
-//        size = 10
-//    );
     color(text_colour)
     text_on_cylinder(
         t=name_text,
@@ -56,8 +48,3 @@ module vase() {
 }
 
 vase();
-
-// TODO:
-// More curvy?
-// Larger base width
-// Solid infill from 15%?
