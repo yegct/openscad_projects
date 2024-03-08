@@ -28,6 +28,7 @@ module vase_text() {
 }
 
 module vase_body() {
+    color("blue")
     difference() {
         linear_sweep(
             circle(d = param_width),
