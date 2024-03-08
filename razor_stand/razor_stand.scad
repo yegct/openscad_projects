@@ -11,7 +11,7 @@ razor_cutout_diameter = 12.0;
 thickness = 1.6;
 height = 150.0;
 width = bowl_cutout_diameter + 20 + razor_cutout_diameter*3;
-depth = bowl_cutout_diameter + 20.0;
+depth = bowl_cutout_diameter + 50.0;
 
 // Smoothing is INCREDIBLY slow.
 should_smooth = true;
