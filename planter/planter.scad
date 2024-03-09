@@ -101,5 +101,15 @@ difference() {
 };
 
 // Solid base
-translate([0,0,-0.5])
-cylinder(r = 50, h = 3);
+
+difference() {
+    hull()
+    rotate_sweep(
+        path,
+        closed=true,
+        style="concave"
+    );
+    
+    translate([0,0,8])
+    cylinder(r=70,h=110-8);
+};
