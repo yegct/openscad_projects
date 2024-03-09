@@ -74,42 +74,64 @@ bezpath_inside = [
 ];
 path_inside = bezpath_curve(bezpath_inside, splinesteps=32);
 
-difference() {
-    union() {
-        // Outside skin with texture
-        rotate_sweep(
-            path, closed=true,
-            texture="diamonds", tex_size=[10,10],
-            tex_depth=1, style="concave");
-        
-        // Solid object without texture
+//difference() {
+//    union() {
+//        // Outside skin with texture
+//        rotate_sweep(
+//            path, closed=true,
+//            texture="diamonds", tex_size=[10,10],
+//            tex_depth=1, style="concave");
+//        
+//        // Solid object without texture
+//        hull()
+//        rotate_sweep(
+//            path,
+//            closed=true,
+//            style="concave"
+//        );
+//    };
+//    
+//    // Carve out inside
+//    hull()
+//    rotate_sweep(
+//        path_inside,
+//        closed=false,
+//        style="concave");
+//
+//};
+//
+//// Solid base
+//
+module solid_base() {
+    difference() {
         hull()
         rotate_sweep(
             path,
             closed=true,
             style="concave"
         );
+        
+        translate([0,0,8])
+        cylinder(r=70,h=110-8);
     };
-    
-    // Carve out inside
-    hull()
-    rotate_sweep(
-        path_inside,
-        closed=false,
-        style="concave");
-
 };
 
-// Solid base
+equalateral_points = [
+    [-0.866, -0.5, 0.0],
+    [0.866, -0.5, 0.0],
+    [0.0, 1.0, 0.0]
+];
+//difference() {
+//    solid_base();
+//
+//    for(equalateral_point = equalateral_points)
+//    translate(equalateral_point * 20)
+//    cylinder(r = 4, h = 4);
+//};
 
-difference() {
-    hull()
-    rotate_sweep(
-        path,
-        closed=true,
-        style="concave"
-    );
-    
-    translate([0,0,8])
-    cylinder(r=70,h=110-8);
-};
+
+cylinder(r = 70, h=1);
+
+for(equalateral_point = equalateral_points)
+translate(equalateral_point * 20)
+cylinder(r = 3, h = 4);
