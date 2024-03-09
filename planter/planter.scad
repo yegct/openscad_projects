@@ -115,28 +115,18 @@ module solid_base(path,r, h) {
     };
 };
 
-solid_base(path, 70, 110);
-
 equalateral_points = [
     [-0.866, -0.5, 0.0],
     [0.866, -0.5, 0.0],
     [0.0, 1.0, 0.0]
 ];
-//difference() {
-//    solid_base();
-//
-//    for(equalateral_point = equalateral_points)
-//    translate(equalateral_point * 20)
-//    cylinder(r = 4, h = 4);
-//};
+difference() {
+    solid_base(path, 70, 110);
 
-
-//cylinder(r = 70, h=1);
-//
-//for(equalateral_point = equalateral_points)
-//translate(equalateral_point * 20)
-//cylinder(r = 3, h = 4);
-
+    for(equalateral_point = equalateral_points)
+    translate(equalateral_point * 25)
+    cylinder(r = 4, h = 4);
+};
 
 // Bowl
 bowl_path_points = [
@@ -185,9 +175,12 @@ difference() {
 };
 solid_base(bowl_path,70*1.4,110*1.4+1);
 
+for(equalateral_point = equalateral_points)
+translate([0,0,8])
+translate(equalateral_point * 25)
+cylinder(r = 3, h = 4);
+
 //TODO
-// 1. Add connectors to bowl
-// 2. Add connector holes to base
 // 3. Add other holes to base
 // 4. Add name tag section
 // 5. Add name tag text
