@@ -101,8 +101,7 @@ path_inside = bezpath_curve(bezpath_inside, splinesteps=32);
 //};
 //
 //// Solid base
-//
-module solid_base() {
+module solid_base(path,r, h) {
     difference() {
         hull()
         rotate_sweep(
@@ -112,9 +111,11 @@ module solid_base() {
         );
         
         translate([0,0,8])
-        cylinder(r=70,h=110-8);
+        cylinder(r=r,h=h-8);
     };
 };
+
+//solid_base(path, 70, 110);
 
 equalateral_points = [
     [-0.866, -0.5, 0.0],
@@ -130,8 +131,54 @@ equalateral_points = [
 //};
 
 
-cylinder(r = 70, h=1);
+//cylinder(r = 70, h=1);
+//
+//for(equalateral_point = equalateral_points)
+//translate(equalateral_point * 20)
+//cylinder(r = 3, h = 4);
 
-for(equalateral_point = equalateral_points)
-translate(equalateral_point * 20)
-cylinder(r = 3, h = 4);
+
+// Bowl
+bowl_path_points = [
+    [50, 0],
+    [70, 20],
+    [60, 60],
+    [60, 110]
+];
+bowl_path = bezpath_curve(bowl_path_points*1.2, splinesteps=32);
+
+bowl_inside_path_points = [
+    [44, 0],
+    [64, 20],
+    [54, 60],
+    [54, 110]
+];
+inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.2, splinesteps=32);
+
+difference() {
+    union() {
+        // Outside skin with texture
+        rotate_sweep(
+            bowl_path, closed=true,
+            texture="diamonds", tex_size=[10,10],
+            tex_depth=1, style="concave");
+        
+        // Solid object without texture
+        hull()
+        rotate_sweep(
+            bowl_path,
+            closed=true,
+            style="concave"
+        );
+    };
+    
+    // Carve out inside
+    hull()
+    rotate_sweep(
+        inside_bowl_path,
+        closed=false,
+        style="concave");
+
+};
+
+solid_base(bowl_path,70*1.2,110);
