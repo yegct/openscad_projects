@@ -74,33 +74,33 @@ bezpath_inside = [
 ];
 path_inside = bezpath_curve(bezpath_inside, splinesteps=32);
 
-//difference() {
-//    union() {
-//        // Outside skin with texture
-//        rotate_sweep(
-//            path, closed=true,
-//            texture="diamonds", tex_size=[10,10],
-//            tex_depth=1, style="concave");
-//        
-//        // Solid object without texture
-//        hull()
-//        rotate_sweep(
-//            path,
-//            closed=true,
-//            style="concave"
-//        );
-//    };
-//    
-//    // Carve out inside
-//    hull()
-//    rotate_sweep(
-//        path_inside,
-//        closed=false,
-//        style="concave");
-//
-//};
-//
-//// Solid base
+difference() {
+    union() {
+        // Outside skin with texture
+        rotate_sweep(
+            path, closed=true,
+            texture="diamonds", tex_size=[10,10],
+            tex_depth=1, style="concave");
+        
+        // Solid object without texture
+        hull()
+        rotate_sweep(
+            path,
+            closed=true,
+            style="concave"
+        );
+    };
+    
+    // Carve out inside
+    hull()
+    rotate_sweep(
+        path_inside,
+        closed=false,
+        style="concave");
+
+};
+
+// Solid base
 module solid_base(path,r, h) {
     difference() {
         hull()
@@ -115,7 +115,7 @@ module solid_base(path,r, h) {
     };
 };
 
-//solid_base(path, 70, 110);
+solid_base(path, 70, 110);
 
 equalateral_points = [
     [-0.866, -0.5, 0.0],
@@ -145,7 +145,7 @@ bowl_path_points = [
     [60, 60],
     [60, 110]
 ];
-bowl_path = bezpath_curve(bowl_path_points*1.2, splinesteps=32);
+bowl_path = bezpath_curve(bowl_path_points*1.4, splinesteps=32);
 
 bowl_inside_path_points = [
     [44, 0],
@@ -153,7 +153,7 @@ bowl_inside_path_points = [
     [54, 60],
     [54, 110]
 ];
-inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.2, splinesteps=32);
+inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.4, splinesteps=32);
 
 difference() {
     union() {
@@ -178,7 +178,19 @@ difference() {
         inside_bowl_path,
         closed=false,
         style="concave");
-
+    
+    // Carve out the whole top section
+    translate([0,0,20])
+    cylinder(r=70*1.4, h=110*1.4+1);
 };
+solid_base(bowl_path,70*1.4,110*1.4+1);
 
-solid_base(bowl_path,70*1.2,110);
+//TODO
+// 1. Add connectors to bowl
+// 2. Add connector holes to base
+// 3. Add other holes to base
+// 4. Add name tag section
+// 5. Add name tag text
+// 6. Adjust texture
+// 7. Epsilon optimize
+// 8. Optimise (cubes instead of cylinders?)
