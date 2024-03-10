@@ -2,7 +2,7 @@
 nozzle_diameter = 0.4;
 $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
-splinesteps = 8;
+splinesteps = $preview ? 8 : 32;
 
 include <BOSL2/std.scad>
 use <text_on/text_on.scad>
@@ -14,7 +14,7 @@ param_width = 100;
 text_colour = "white";
 text_size = 20;
 twist = 120;
-epsilon = 0.1;
+epsilon = 0.01;
 
 module vase_text() {
     color(text_colour)
@@ -195,3 +195,22 @@ cylinder(r = 3, h = 4);
 // 3. Epsilon optimize
 // 4. Restructure code
 
+module name_tag(angle=60) {
+    rotate_extrude(angle=angle)
+    translate([70,0,0])
+    difference() {
+        square([5,20]);
+        translate([4,1,0])
+        square([1,18]);
+    };
+
+    translate([70,0,0])
+    cube([5,1,20]);
+
+    rotate(angle-epsilon)
+    translate([70,0,0])
+    cube([5,1,20]);
+}
+
+translate([20,0,0])
+name_tag(60);
