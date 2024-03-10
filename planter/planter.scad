@@ -75,32 +75,6 @@ bezpath_inside = [
 ];
 path_inside = bezpath_curve(bezpath_inside, splinesteps=splinesteps);
 
-difference() {
-    union() {
-        // Outside skin with texture
-        rotate_sweep(
-            path, closed=true,
-            texture="diamonds", tex_size=[5,5],
-            tex_depth=1, style="concave");
-        
-        // Solid object without texture
-        hull()
-        rotate_sweep(
-            path,
-            closed=true,
-            style="concave"
-        );
-    };
-    
-    // Carve out inside
-    hull()
-    rotate_sweep(
-        path_inside,
-        closed=false,
-        style="concave");
-
-};
-
 // Solid base
 module solid_base(path,r, h) {
     difference() {
@@ -121,20 +95,50 @@ equalateral_points = [
     [0.866, -0.5, 0.0],
     [0.0, 1.0, 0.0]
 ];
-difference() {
-    solid_base(path, 70, 110);
 
-    // mounting points
-    for(equalateral_point = equalateral_points)
-    translate(equalateral_point * 25)
-    cylinder(r = 4, h = 4);
+module planter() {
 
-    // drainage holes
-    rotate(180)
-    for(equalateral_point = equalateral_points)
-    translate(equalateral_point * 25)
-    cylinder(r = 4, h = 8);
-    cylinder(r = 4, h = 8);
+    difference() {
+        union() {
+            // Outside skin with texture
+            rotate_sweep(
+                path, closed=true,
+                texture="diamonds", tex_size=[5,5],
+                tex_depth=1, style="concave");
+            
+            // Solid object without texture
+            hull()
+            rotate_sweep(
+                path,
+                closed=true,
+                style="concave"
+            );
+        };
+        
+        // Carve out inside
+        hull()
+        rotate_sweep(
+            path_inside,
+            closed=false,
+            style="concave");
+    
+    };
+    
+    difference() {
+        solid_base(path, 70, 110);
+    
+        // mounting points
+        for(equalateral_point = equalateral_points)
+        translate(equalateral_point * 25)
+        cylinder(r = 4, h = 4);
+    
+        // drainage holes
+        rotate(180)
+        for(equalateral_point = equalateral_points)
+        translate(equalateral_point * 25)
+        cylinder(r = 4, h = 8);
+        cylinder(r = 4, h = 8);
+    };
 };
 
 // Bowl
@@ -154,63 +158,92 @@ bowl_inside_path_points = [
 ];
 inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.4, splinesteps=splinesteps);
 
-difference() {
-    union() {
-        // Outside skin with texture
-        rotate_sweep(
-            bowl_path, closed=true,
-            texture="diamonds", tex_size=[5,5],
-            tex_depth=1, style="concave");
+module bowl() {
+    difference() {
+        union() {
+            // Outside skin with texture
+            rotate_sweep(
+                bowl_path, closed=true,
+                texture="diamonds", tex_size=[5,5],
+                tex_depth=1, style="concave");
+            
+            // Solid object without texture
+            hull()
+            rotate_sweep(
+                bowl_path,
+                closed=true,
+                style="concave"
+            );
+        };
         
-        // Solid object without texture
+        // Carve out inside
         hull()
         rotate_sweep(
-            bowl_path,
-            closed=true,
-            style="concave"
-        );
+            inside_bowl_path,
+            closed=false,
+            style="concave");
+        
+        // Carve out the whole top section
+        translate([-70*1.4,-70*1.4,20])
+        cube([70*1.4*2,70*1.4*2,110*1.4]);
     };
+    solid_base(bowl_path,70*1.4,110*1.4+1);
     
-    // Carve out inside
-    hull()
-    rotate_sweep(
-        inside_bowl_path,
-        closed=false,
-        style="concave");
-    
-    // Carve out the whole top section
-    translate([-70*1.4,-70*1.4,20])
-    cube([70*1.4*2,70*1.4*2,110*1.4]);
+    for(equalateral_point = equalateral_points)
+    translate([0,0,8])
+    translate(equalateral_point * 25)
+    cylinder(r = 3, h = 4);
 };
-solid_base(bowl_path,70*1.4,110*1.4+1);
 
-for(equalateral_point = equalateral_points)
-translate([0,0,8])
-translate(equalateral_point * 25)
-cylinder(r = 3, h = 4);
-
-//TODO
-// 1. Add name tag section
-// 2. Add name tag text
-// 3. Epsilon optimize
-// 4. Restructure code
-
+// The bottom doesn't sit flush with the
+// build plate due to the texture.
+// Clean that up.
+module clean_up_bottom() {
+    difference() {
+        children();
+        translate([-60*1.4,-60*1.4,-1])
+        cube([60*1.4*2, 60*1.4*2, 2]);
+    };
+};
+        
 module name_tag(angle=60) {
     rotate_extrude(angle=angle)
-    translate([70,0,0])
+    translate([60,0,0])
     difference() {
         square([5,20]);
         translate([4,1,0])
         square([1,18]);
     };
 
-    translate([70,0,0])
+    translate([60,0,0])
     cube([5,1,20]);
 
     rotate(angle-epsilon)
-    translate([70,0,0])
+    translate([60,0,0])
     cube([5,1,20]);
-}
 
-translate([20,0,0])
-name_tag(60);
+    text_on_cylinder(
+        t="name_text",
+        r1=param_width/2,
+        r2=param_width/2,
+        h=text_size/2,
+        font="Arial:style=Bold",
+        direction="ttb",
+        size=text_size);
+}
+//
+//translate([-1,-1,80])
+//name_tag(100);
+
+clean_up_bottom()
+planter();
+
+clean_up_bottom()
+bowl();
+
+//TODO
+// 1. Add name tag section
+// 2. Add name tag text
+// 3. Epsilon optimize
+// 4. Restructure code
+// 5. Move text into the right place
