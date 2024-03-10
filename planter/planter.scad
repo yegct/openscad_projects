@@ -2,6 +2,7 @@
 nozzle_diameter = 0.4;
 $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
+splinesteps = 8;
 
 include <BOSL2/std.scad>
 use <text_on/text_on.scad>
@@ -64,7 +65,7 @@ bezpath_planter = [
     [60, 110]
 ];
 bezpath = bezpath_planter;
-path = bezpath_curve(bezpath, splinesteps=32);
+path = bezpath_curve(bezpath, splinesteps=splinesteps);
 
 bezpath_inside = [
     [44, 0],
@@ -72,14 +73,14 @@ bezpath_inside = [
     [54, 60],
     [54, 110]
 ];
-path_inside = bezpath_curve(bezpath_inside, splinesteps=32);
+path_inside = bezpath_curve(bezpath_inside, splinesteps=splinesteps);
 
 difference() {
     union() {
         // Outside skin with texture
         rotate_sweep(
             path, closed=true,
-            texture="diamonds", tex_size=[10,10],
+            texture="diamonds", tex_size=[5,5],
             tex_depth=1, style="concave");
         
         // Solid object without texture
@@ -143,7 +144,7 @@ bowl_path_points = [
     [60, 60],
     [60, 110]
 ];
-bowl_path = bezpath_curve(bowl_path_points*1.4, splinesteps=32);
+bowl_path = bezpath_curve(bowl_path_points*1.4, splinesteps=splinesteps);
 
 bowl_inside_path_points = [
     [44, 0],
@@ -151,14 +152,14 @@ bowl_inside_path_points = [
     [54, 60],
     [54, 110]
 ];
-inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.4, splinesteps=32);
+inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.4, splinesteps=splinesteps);
 
 difference() {
     union() {
         // Outside skin with texture
         rotate_sweep(
             bowl_path, closed=true,
-            texture="diamonds", tex_size=[10,10],
+            texture="diamonds", tex_size=[5,5],
             tex_depth=1, style="concave");
         
         // Solid object without texture
@@ -189,9 +190,8 @@ translate(equalateral_point * 25)
 cylinder(r = 3, h = 4);
 
 //TODO
-// 4. Add name tag section
-// 5. Add name tag text
-// 6. Adjust texture
-// 7. Epsilon optimize
-// 8. Restructure code
+// 1. Add name tag section
+// 2. Add name tag text
+// 3. Epsilon optimize
+// 4. Restructure code
 
