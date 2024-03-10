@@ -206,44 +206,45 @@ module clean_up_bottom() {
     };
 };
         
-module name_tag(angle=60) {
+module name_tag(angle=60, text) {
     rotate_extrude(angle=angle)
     translate([60,0,0])
     difference() {
-        square([5,20]);
+        square([5,24]);
         translate([4,1,0])
-        square([1,18]);
+        square([1,22]);
     };
 
     translate([60,0,0])
-    cube([5,1,20]);
+    cube([5,1,24]);
 
     rotate(angle-epsilon)
     translate([60,0,0])
-    cube([5,1,20]);
+    cube([5,1,24]);
 
+    rotate(100)
+    translate([0,0,-3])
     text_on_cylinder(
-        t="name_text",
-        r1=param_width/2,
-        r2=param_width/2,
+        t=text,
+        r1=65,
+        r2=65,
         h=text_size/2,
         font="Arial:style=Bold",
         direction="ttb",
         size=text_size);
 }
-//
-//translate([-1,-1,80])
-//name_tag(100);
 
 clean_up_bottom()
 planter();
+//
+//clean_up_bottom()
+//bowl();
 
-clean_up_bottom()
-bowl();
+
+translate([-1.2,-1.2,80])
+name_tag(104, "Christa");
 
 //TODO
-// 1. Add name tag section
-// 2. Add name tag text
-// 3. Epsilon optimize
-// 4. Restructure code
-// 5. Move text into the right place
+// 1. Figure out how to center the text?
+// 2. Epsilon optimize
+// 3. Restructure code
