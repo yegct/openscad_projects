@@ -110,8 +110,8 @@ module solid_base(path,r, h) {
             style="concave"
         );
         
-        translate([0,0,8])
-        cylinder(r=r,h=h-8);
+        translate([-r,-r,8])
+        cube([r*2,r*2,h-8]);
     };
 };
 
@@ -178,8 +178,8 @@ difference() {
         style="concave");
     
     // Carve out the whole top section
-    translate([0,0,20])
-    cylinder(r=70*1.4, h=110*1.4+1);
+    translate([-70*1.4,-70*1.4,20])
+    cube([70*1.4*2,70*1.4*2,110*1.4]);
 };
 solid_base(bowl_path,70*1.4,110*1.4+1);
 
@@ -193,4 +193,5 @@ cylinder(r = 3, h = 4);
 // 5. Add name tag text
 // 6. Adjust texture
 // 7. Epsilon optimize
-// 8. Optimise (cubes instead of cylinders?)
+// 8. Restructure code
+
