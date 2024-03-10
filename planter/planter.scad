@@ -123,9 +123,17 @@ equalateral_points = [
 difference() {
     solid_base(path, 70, 110);
 
+    // mounting points
     for(equalateral_point = equalateral_points)
     translate(equalateral_point * 25)
     cylinder(r = 4, h = 4);
+
+    // drainage holes
+    rotate(180)
+    for(equalateral_point = equalateral_points)
+    translate(equalateral_point * 25)
+    cylinder(r = 4, h = 8);
+    cylinder(r = 4, h = 8);
 };
 
 // Bowl
@@ -181,7 +189,6 @@ translate(equalateral_point * 25)
 cylinder(r = 3, h = 4);
 
 //TODO
-// 3. Add other holes to base
 // 4. Add name tag section
 // 5. Add name tag text
 // 6. Adjust texture
