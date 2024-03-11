@@ -4,6 +4,7 @@ $fs = $preview ? $fs : nozzle_diameter / 2;
 $fa = $preview ? $fa : 5;
 splinesteps = $preview ? 8 : 32;
 
+include <BOSL2/beziers.scad>
 include <BOSL2/std.scad>
 use <text_on/text_on.scad>
 
@@ -13,7 +14,6 @@ mounting_height = 4;
 text_size = 20;
 epsilon = 0.01;
 
-include <BOSL2/beziers.scad>
 bezpath = [
     [50, 0],
     [70, 20],
@@ -46,7 +46,6 @@ equalateral_points = [
 ];
 
 module planter() {
-
     difference() {
         union() {
             // Outside skin with texture
@@ -70,7 +69,6 @@ module planter() {
             path_inside,
             closed=false,
             style="concave");
-    
     };
     
     difference() {
@@ -85,8 +83,8 @@ module planter() {
         rotate(180)
         for(equalateral_point = equalateral_points)
         translate(equalateral_point * 25)
-        cylinder(r = 4, h = mounting_height+wall_thickness);
-        cylinder(r = 4, h = mounting_height+wall_thickness );
+        cylinder(r = 4, h = mounting_height+wall_thickness+epsilon);
+        cylinder(r = 4, h = mounting_height+wall_thickness+epsilon);
     };
 };
 
@@ -182,5 +180,4 @@ bowl();
 
 //TODO
 // 3. Figure out how to center the text?
-// 4. Epsilon optimize
 // 5. Restructure code
