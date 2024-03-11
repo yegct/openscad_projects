@@ -8,7 +8,7 @@ include <BOSL2/std.scad>
 use <text_on/text_on.scad>
 
 name_text = "Name";
-param_wall_thickness = 2;
+wall_thickness = 3;
 param_height = 180;
 param_width = 100;
 text_colour = "white";
@@ -17,21 +17,15 @@ twist = 120;
 epsilon = 0.01;
 
 include <BOSL2/beziers.scad>
-bezpath_planter = [
+bezpath = [
     [50, 0],
     [70, 20],
     [60, 60],
     [60, 110]
 ];
-bezpath = bezpath_planter;
 path = bezpath_curve(bezpath, splinesteps=splinesteps);
 
-bezpath_inside = [
-    [44, 0],
-    [64, 20],
-    [54, 60],
-    [54, 110]
-];
+bezpath_inside = [ for (i = bezpath) [i[0]-wall_thickness,i[1]] ];
 path_inside = bezpath_curve(bezpath_inside, splinesteps=splinesteps);
 
 // Solid base
@@ -101,20 +95,9 @@ module planter() {
 };
 
 // Bowl
-bowl_path_points = [
-    [50, 0],
-    [70, 20],
-    [60, 60],
-    [60, 110]
-];
-bowl_path = bezpath_curve(bowl_path_points*1.4, splinesteps=splinesteps);
+bowl_path = bezpath_curve(bezpath*1.4, splinesteps=splinesteps);
 
-bowl_inside_path_points = [
-    [44, 0],
-    [64, 20],
-    [54, 60],
-    [54, 110]
-];
+bowl_inside_path_points = [ for (i = bezpath) [i[0]-wall_thickness,i[1]] ];
 inside_bowl_path = bezpath_curve(bowl_inside_path_points*1.4, splinesteps=splinesteps);
 
 module bowl() {
@@ -143,7 +126,7 @@ module bowl() {
             style="concave");
         
         // Carve out the whole top section
-        translate([-70*1.4,-70*1.4,20])
+        translate([-70*1.4,-70*1.4,30])
         cube([70*1.4*2,70*1.4*2,110*1.4]);
     };
     solid_base(bowl_path,70*1.4,110*1.4+1);
@@ -193,15 +176,13 @@ module name_tag(angle=60, text) {
         size=text_size);
 }
 
-//clean_up_bottom()
-//planter();
+clean_up_bottom()
+planter();
 //translate([-1.2,-1.2,80])
-//name_tag(104, "Christa");
+//name_tag(104, "Chris");
 
 clean_up_bottom()
 bowl();
-
-
 
 //TODO
 // 1. Thinner walls
