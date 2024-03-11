@@ -245,6 +245,8 @@ translate([-1.2,-1.2,80])
 name_tag(104, "Christa");
 
 //TODO
-// 1. Figure out how to center the text?
-// 2. Epsilon optimize
-// 3. Restructure code
+// 1. Thinner walls
+// 2. Change hole pattern?
+// 3. Figure out how to center the text?
+// 4. Epsilon optimize
+// 5. Restructure code
