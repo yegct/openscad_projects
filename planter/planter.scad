@@ -17,12 +17,6 @@ twist = 120;
 epsilon = 0.01;
 
 include <BOSL2/beziers.scad>
-bezpath_vase = [
-    [10, 0],
-    [30, 10],
-    [20, 60],
-    [10, 110]
-];
 bezpath_planter = [
     [50, 0],
     [70, 20],
