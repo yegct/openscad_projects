@@ -16,41 +16,6 @@ text_size = 20;
 twist = 120;
 epsilon = 0.01;
 
-module vase_text() {
-    color(text_colour)
-    text_on_cylinder(
-        t=name_text,
-        r1=param_width/2,
-        r2=param_width/2,
-        h=text_size/2,
-        font="Arial:style=Bold",
-        direction="ttb",
-        size=text_size);
-}
-
-module vase_body() {
-    color("blue")
-    difference() {
-        linear_sweep(
-            circle(d = param_width),
-            h = param_height,
-            texture=texture("diamonds"),
-            tex_size=[10,10],
-            style="concave",
-            twist=twist
-        );
-        translate([0, 0, param_wall_thickness])
-            cylinder(h = param_height, d = param_width - 2 * param_wall_thickness);
-    };
-}
-
-module vase() {
-    vase_body();
-    vase_text();
-}
-
-// vase();
-
 include <BOSL2/beziers.scad>
 bezpath_vase = [
     [10, 0],
@@ -234,15 +199,15 @@ module name_tag(angle=60, text) {
         size=text_size);
 }
 
-clean_up_bottom()
-planter();
-//
 //clean_up_bottom()
-//bowl();
+//planter();
+//translate([-1.2,-1.2,80])
+//name_tag(104, "Christa");
+
+clean_up_bottom()
+bowl();
 
 
-translate([-1.2,-1.2,80])
-name_tag(104, "Christa");
 
 //TODO
 // 1. Thinner walls
