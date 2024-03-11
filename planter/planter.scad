@@ -7,14 +7,10 @@ splinesteps = $preview ? 8 : 32;
 include <BOSL2/std.scad>
 use <text_on/text_on.scad>
 
-name_text = "Name";
+name_text = "Chris";
 wall_thickness = 3;
 mounting_height = 4;
-param_height = 180;
-param_width = 100;
-text_colour = "white";
 text_size = 20;
-twist = 120;
 epsilon = 0.01;
 
 include <BOSL2/beziers.scad>
@@ -44,8 +40,8 @@ module solid_base(path,r, h,depth) {
 };
 
 equalateral_points = [
-    [-0.866, -0.5, 0.0],
-    [0.866, -0.5, 0.0],
+    [-0.867, -0.5, 0.0],
+    [0.867, -0.5, 0.0],
     [0.0, 1.0, 0.0]
 ];
 
@@ -81,7 +77,7 @@ module planter() {
         solid_base(path, 70, 110,mounting_height+wall_thickness);
     
         // mounting points
-        for(equalateral_point = equalateral_points)
+        for(equalateral_point = equalateral_points*1.2)
         translate(equalateral_point * 25)
         cylinder(r = 4, h = mounting_height);
     
@@ -131,7 +127,7 @@ module bowl() {
     };
     solid_base(bowl_path,70*1.4,110*1.4+1,wall_thickness);
     
-    for(equalateral_point = equalateral_points)
+    for(equalateral_point = equalateral_points*1.2)
     translate([0,0,wall_thickness])
     translate(equalateral_point * 25)
     cylinder(r = 3, h = 4);
@@ -178,15 +174,13 @@ module name_tag(angle=60, text) {
 
 clean_up_bottom()
 planter();
-//translate([-1.2,-1.2,80])
-//name_tag(104, "Chris");
+translate([-1.2,-1.2,80])
+name_tag(104, name_text);
 
-//clean_up_bottom()
-//bowl();
+clean_up_bottom()
+bowl();
 
 //TODO
-// 1. Thinner walls
-// 2. Change hole pattern?
 // 3. Figure out how to center the text?
 // 4. Epsilon optimize
 // 5. Restructure code
