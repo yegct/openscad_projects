@@ -9,6 +9,7 @@ use <text_on/text_on.scad>
 
 name_text = "Name";
 wall_thickness = 3;
+mounting_height = 4;
 param_height = 180;
 param_width = 100;
 text_colour = "white";
@@ -28,8 +29,7 @@ path = bezpath_curve(bezpath, splinesteps=splinesteps);
 bezpath_inside = [ for (i = bezpath) [i[0]-wall_thickness,i[1]] ];
 path_inside = bezpath_curve(bezpath_inside, splinesteps=splinesteps);
 
-// Solid base
-module solid_base(path,r, h) {
+module solid_base(path,r, h,depth) {
     difference() {
         hull()
         rotate_sweep(
@@ -38,8 +38,8 @@ module solid_base(path,r, h) {
             style="concave"
         );
         
-        translate([-r,-r,8])
-        cube([r*2,r*2,h-8]);
+        translate([-r,-r,depth])
+        cube([r*2,r*2,h-depth]);
     };
 };
 
@@ -78,19 +78,19 @@ module planter() {
     };
     
     difference() {
-        solid_base(path, 70, 110);
+        solid_base(path, 70, 110,mounting_height+wall_thickness);
     
         // mounting points
         for(equalateral_point = equalateral_points)
         translate(equalateral_point * 25)
-        cylinder(r = 4, h = 4);
+        cylinder(r = 4, h = mounting_height);
     
         // drainage holes
         rotate(180)
         for(equalateral_point = equalateral_points)
         translate(equalateral_point * 25)
-        cylinder(r = 4, h = 8);
-        cylinder(r = 4, h = 8);
+        cylinder(r = 4, h = mounting_height+wall_thickness);
+        cylinder(r = 4, h = mounting_height+wall_thickness );
     };
 };
 
@@ -129,10 +129,10 @@ module bowl() {
         translate([-70*1.4,-70*1.4,30])
         cube([70*1.4*2,70*1.4*2,110*1.4]);
     };
-    solid_base(bowl_path,70*1.4,110*1.4+1);
+    solid_base(bowl_path,70*1.4,110*1.4+1,wall_thickness);
     
     for(equalateral_point = equalateral_points)
-    translate([0,0,8])
+    translate([0,0,wall_thickness])
     translate(equalateral_point * 25)
     cylinder(r = 3, h = 4);
 };
@@ -181,8 +181,8 @@ planter();
 //translate([-1.2,-1.2,80])
 //name_tag(104, "Chris");
 
-clean_up_bottom()
-bowl();
+//clean_up_bottom()
+//bowl();
 
 //TODO
 // 1. Thinner walls
