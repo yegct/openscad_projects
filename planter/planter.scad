@@ -6,12 +6,15 @@ splinesteps = $preview ? 8 : 32;
 
 include <BOSL2/beziers.scad>
 include <BOSL2/std.scad>
+use <fontmetrics/fontmetrics.scad>
 use <text_on/text_on.scad>
 
-name_text = "Chris";
+name_text = "Bob & Sylvia";
+text_adjust = 2.8;
 wall_thickness = 3;
 mounting_height = 4;
-text_size = 20;
+text_size = 14;
+font = "Arial";
 epsilon = 0.01;
 
 bezpath = [
@@ -142,7 +145,8 @@ module clean_up_bottom() {
     };
 };
         
-module name_tag(angle=60, text) {
+module name_tag(text) {
+    angle = measureText(text, font=font, size=text_size + text_adjust);
     rotate_extrude(angle=angle)
     translate([60,0,0])
     difference() {
@@ -159,25 +163,23 @@ module name_tag(angle=60, text) {
     cube([5,1,24]);
 
     rotate(100)
-    translate([0,0,-3])
+    translate([0,0,3])
     text_on_cylinder(
         t=text,
         r1=65,
         r2=65,
         h=text_size/2,
-        font="Arial:style=Bold",
-        direction="ttb",
+        font=font,
         size=text_size);
 }
 
 clean_up_bottom()
 planter();
 translate([-1.2,-1.2,80])
-name_tag(104, name_text);
+name_tag(name_text);
 
 clean_up_bottom()
 bowl();
 
 //TODO
-// 3. Figure out how to center the text?
 // 5. Restructure code
