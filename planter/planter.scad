@@ -10,7 +10,7 @@ use <fontmetrics/fontmetrics.scad>
 use <text_on/text_on.scad>
 
 name_text = "Bob & Sylvia";
-text_adjust = 2.8;
+text_adjust = 3;
 wall_thickness = 3;
 mounting_height = 4;
 text_size = 14;
@@ -178,8 +178,8 @@ module name_tag(text) {
     translate([0,0,3])
     text_on_cylinder(
         t=text,
-        r1=planter_radius_at_top+5,
-        r2=planter_radius_at_top+5,
+        r1=planter_radius_at_top+3.5,
+        r2=planter_radius_at_top+3.5,
         h=text_size/2,
         font=font,
         size=text_size);
@@ -190,5 +190,5 @@ planter();
 translate([-1.2,-1.2,80])
 name_tag(name_text);
 
-clean_up_bottom()
-bowl();
+//clean_up_bottom()
+//bowl();
