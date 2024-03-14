@@ -49,8 +49,8 @@ module solid_base(path,r, h,depth) {
         
         translate([-r,-r,depth])
         cube([r*2,r*2,h-depth]);
-    };
-};
+    }
+}
 
 module planter() {
     path = bezpath_curve(bezpath, splinesteps=splinesteps);
@@ -75,7 +75,7 @@ module planter() {
                 closed=true,
                 style="concave"
             );
-        };
+        }
         
         // Carve out inside
         hull()
@@ -83,24 +83,25 @@ module planter() {
             path_inside,
             closed=false,
             style="concave");
-    };
+    }
     
     difference() {
         solid_base(path, planter_max_radius, planter_height, mounting_height+wall_thickness);
     
-        // mounting points
+        // mounting point
+        sphere(r=4.2);
+
+        // drainage holes
         for(equalateral_point = equalateral_points()*1.2)
         translate(equalateral_point * 25)
-        cylinder(r = 4, h = mounting_height);
+        cylinder(r = 4, h = mounting_height+wall_thickness+epsilon);
     
-        // drainage holes
         rotate(180)
         for(equalateral_point = equalateral_points())
         translate(equalateral_point * 25)
         cylinder(r = 4, h = mounting_height+wall_thickness+epsilon);
-        cylinder(r = 4, h = mounting_height+wall_thickness+epsilon);
-    };
-};
+    }
+}
 
 module bowl() {
     bowl_path = bezpath_curve(bezpath*1.4, splinesteps=splinesteps);
@@ -125,7 +126,7 @@ module bowl() {
                 closed=true,
                 style="concave"
             );
-        };
+        }
         
         // Carve out inside
         hull()
@@ -137,14 +138,17 @@ module bowl() {
         // Carve out the whole top section
         translate([-planter_max_radius*1.4,-planter_max_radius*1.4,30])
         cube([planter_max_radius*1.4*2,planter_max_radius*1.4*2,planter_height*1.4]);
-    };
+    }
     solid_base(bowl_path,planter_max_radius*1.4,planter_height*1.4+1,wall_thickness);
     
-    for(equalateral_point = equalateral_points()*1.2)
+    // Mounting point
     translate([0,0,wall_thickness])
-    translate(equalateral_point * 25)
-    cylinder(r = 3, h = 4);
-};
+    difference() {
+        sphere(r=4);
+        translate([0,0,-4])
+        cube(8, center=true);
+    }
+}
 
 // The bottom doesn't sit flush with the
 // build plate due to the texture.
@@ -154,8 +158,8 @@ module clean_up_bottom() {
         children();
         translate([-planter_max_radius*1.4,-planter_max_radius*1.4,-1])
         cube([planter_max_radius*1.4*2, planter_max_radius*1.4*2, 2]);
-    };
-};
+    }
+}
         
 module name_tag(text) {
     angle = measureText(text, font=font, size=text_size + text_adjust);
@@ -165,7 +169,7 @@ module name_tag(text) {
         square([5,24]);
         translate([4,1,0])
         square([1,22]);
-    };
+    }
 
     translate([planter_radius_at_top,0,0])
     cube([5,1,24]);
@@ -187,8 +191,8 @@ module name_tag(text) {
 
 clean_up_bottom()
 planter();
-translate([-1.2,-1.2,80])
-name_tag(name_text);
+//translate([-1.2,-1.2,80])
+//name_tag(name_text);
 
 //clean_up_bottom()
 //bowl();
