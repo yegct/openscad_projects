@@ -191,8 +191,8 @@ module name_tag(text) {
 
 clean_up_bottom()
 planter();
-//translate([-1.2,-1.2,80])
-//name_tag(name_text);
+translate([-1.2,-1.2,80])
+name_tag(name_text);
 
-//clean_up_bottom()
-//bowl();
+clean_up_bottom()
+bowl();
