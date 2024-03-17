@@ -11,10 +11,11 @@ use <text_on/text_on.scad>
 
 name_text = "Bob & Sylvia";
 text_adjust = 3;
-wall_thickness = 3;
+wall_thickness = 2;
 mounting_height = 4;
 text_size = 14;
 font = "Arial";
+scale = 1.2;
 
 texture = "diamonds";
 tex_size=[5,5];
@@ -142,12 +143,12 @@ module bowl() {
     solid_base(bowl_path,planter_max_radius*1.4,planter_height*1.4+1,wall_thickness);
     
     // Mounting point
-    translate([0,0,wall_thickness])
-    difference() {
-        sphere(r=4);
-        translate([0,0,-4])
-        cube(8, center=true);
-    }
+//    translate([0,0,wall_thickness])
+//    difference() {
+//        sphere(r=4);
+//        translate([0,0,-4])
+//        cube(8, center=true);
+//    }
 }
 
 // The bottom doesn't sit flush with the
@@ -189,10 +190,13 @@ module name_tag(text) {
         size=text_size);
 }
 
-clean_up_bottom()
-planter();
-translate([-1.2,-1.2,80])
-name_tag(name_text);
+scale([scale,scale,scale]) {
+    clean_up_bottom()
+    planter();
+    translate([-1.2,-1.2,80])
+    name_tag(name_text);
+}
 
+scale([scale,scale,scale])
 clean_up_bottom()
 bowl();
