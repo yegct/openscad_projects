@@ -9,8 +9,6 @@ board_gap = 2;
 
 hold_count = 3;
 
-
-
 module swatch_hole() {
     cube([
         display_board_width + board_gap * 2,
@@ -28,9 +26,7 @@ module swatch_container_slab() {
 }
 
 module swatch_container_slots() {
-    difference() {
-        swatch_container_slab();
-
+    union() {
         translate([board_gap * 4, board_gap, board_gap])
         cube([
             display_board_width - board_gap * 4,
@@ -50,4 +46,7 @@ module swatch_container_slots() {
     }
 }
 
-swatch_container_slots();
+difference() {
+    swatch_container_slab();
+    swatch_container_slots();
+}
