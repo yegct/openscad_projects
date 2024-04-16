@@ -17,9 +17,9 @@ box_thickness = 1.5;
 // Length of notch separating filament boards
 notch = 4;
 // How many filament boards to contain
-hold_count = 2;
+hold_count = 5;
 // Diamonds? Alternatively, circles
-cutouts_diamonds = true;
+cutouts_diamonds = false;
 
 
 //translate([4,-4,2])
