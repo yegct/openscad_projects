@@ -19,12 +19,11 @@ function display_board_depth() = 3;
 board_gap = 1.5;
 notch = 4;
 hold_count = 2;
-cutouts_hexagons = true;
+cutouts_hexagons = false;
 
 module swatch_container_box() {
     difference() {
         cube([
-//            display_board_width() + (board_gap + notch) * 2,
             display_board_width() + 2 + board_gap * 2,
             board_gap * (hold_count + 1) + (display_board_depth() + 1) * hold_count,
             display_board_height() + board_gap
@@ -56,7 +55,7 @@ module swatch_display_holes() {
     union() {
         for (row = [1:5]) {
             for (col = [1:4]) {
-                translate([26.5 * col - 12 + board_gap, -1, row * 26 - 12 + board_gap])
+                translate([26.5 * col - 12 + board_gap, -1, row * 26 - 11 + board_gap])
                 rotate([-90,90,0])
                 cylinder(
                     h = (display_board_depth() + board_gap * 2) * hold_count + board_gap + 2,
@@ -72,6 +71,6 @@ difference() {
     swatch_container_box();
     swatch_container_slots();
     swatch_display_holes();
-    translate([0,-5,52])
+    translate([0,-5,18])
     cube([150,150,150]);
 }
