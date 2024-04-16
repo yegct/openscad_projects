@@ -2,6 +2,7 @@
 // Attribution-ShareAlike 4.0 International.
 // For full licensing terms, see
 // https://creativecommons.org/licenses/by-sa/4.0/deed.en
+// Source code at https://github.com/yegct/openscad_projects/tree/main/swatches
 
 // Used to smooth resulting output
 nozzle_diameter = 0.4;
