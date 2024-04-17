@@ -21,7 +21,8 @@ notch = 4;
 hold_count = 5;
 // Diamonds? Alternatively, circles
 cutouts_diamonds = false;
-
+// How much 'tolerance' spacing between display boards?
+extra_spacing = 1.5;
 
 //translate([4,-4,2])
 //rotate([90,0,0])
@@ -32,14 +33,14 @@ module swatch_container_box() {
     difference() {
         cube([
             display_board_width() + 2 + box_thickness * 2,
-            box_thickness * (hold_count + 1) + (display_board_depth() + 1) * hold_count,
+            box_thickness * (hold_count + 1) + (display_board_depth() + extra_spacing) * hold_count,
             display_board_height() + box_thickness
         ]);
         
         translate([box_thickness + notch, box_thickness, box_thickness])
         cube([
             display_board_width() - notch * 2,
-            box_thickness * (hold_count - 1) + (display_board_depth() + 1) * hold_count,
+            box_thickness * (hold_count - 1) + (display_board_depth() + extra_spacing) * hold_count,
             display_board_height() + box_thickness
         ]);
     }
@@ -49,12 +50,12 @@ module swatch_container_slots() {
     for (i = [1:hold_count])
     translate([
         box_thickness,
-        box_thickness * i + (display_board_depth() + 1) * (i - 1),
+        box_thickness * i + (display_board_depth() + extra_spacing) * (i - 1),
         box_thickness
     ]) cube([
         display_board_width() + 2,
-        display_board_depth() + 1,
-        display_board_height() + 0.01
+        display_board_depth() + extra_spacing,
+        display_board_height()
     ]);
 }
 
@@ -65,7 +66,7 @@ module swatch_display_holes() {
                 translate([26.5 * col - 11 + box_thickness, -1, row * 26 - 11 + box_thickness])
                 rotate([-90,90,0])
                 cylinder(
-                    h = (display_board_depth() + box_thickness * 2) * hold_count + box_thickness + 2,
+                    h = (display_board_depth() + box_thickness * 2) * hold_count + box_thickness + 1 + extra_spacing,
                     d = 16,
                     $fn = cutouts_diamonds ? 4 : -1
                 );
